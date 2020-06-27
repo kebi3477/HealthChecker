@@ -1,7 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
         android:id="@+id/homeItem"
-        android:icon="@android:drawable/alert_dark_frame"
+        android:icon="@mipmap/ic_launcher_round"
         android:title="Home" />
+
+    <item
+        android:id="@+id/recodeItem"
+        android:icon="@mipmap/ic_launcher"
+        android:title="Recode" />
+
+    <item
+        android:id="@+id/strengthItem"
+        android:icon="@mipmap/ic_launcher"
+        android:title="Strength" />
+
+    <item
+        android:id="@+id/rankingItem"
+        android:icon="@mipmap/ic_launcher"
+        android:title="Ranking" />
+
+    <item
+        android:id="@+id/moreItem"
+        android:icon="@mipmap/ic_launcher"
+        android:title="More" />
+
 </menu>
