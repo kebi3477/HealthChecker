@@ -8,5 +8,8 @@
     <color name="colorPrimaryBlue">#77BBE0</color>
     <color name="colorPrimaryYellow">#FFCE80</color>
     <color name="colorPrimaryGray">#555555</color>
+    <color name="colorPrimaryRipple">#3333336e</color>
+    <color name="colorBackground">#F3F3F3</color>
+    <color name="colorLightGray">#E2E2E2</color>
 
 </resources>
