@@ -3,27 +3,27 @@
 
     <item
         android:id="@+id/homeItem"
-        android:icon="@mipmap/ic_launcher_round"
+        android:icon="@mipmap/home"
         android:title="Home" />
 
     <item
         android:id="@+id/recodeItem"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/ic_history"
         android:title="Recode" />
 
     <item
         android:id="@+id/strengthItem"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/strength"
         android:title="Strength" />
 
     <item
         android:id="@+id/rankingItem"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/gift"
         android:title="Ranking" />
 
     <item
         android:id="@+id/moreItem"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/my"
         android:title="More" />
 
 </menu>

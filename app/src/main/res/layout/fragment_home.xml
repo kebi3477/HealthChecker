@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -53,26 +54,44 @@
                 <Button
                     android:id="@+id/runningButton"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/colorPrimaryBlue"
+                    android:gravity="left"
+                    android:padding="10dp"
+                    android:text="@string/running"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
                     android:visibility="visible" />
 
                 <Button
-                    android:id="@+id/pushupButton"
+                    android:id="@+id/pushUpButton"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/colorPrimaryRed"
+                    android:gravity="left"
+                    android:padding="10dp"
+                    android:text="@string/pushUp"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
                     android:visibility="visible" />
 
                 <Button
-                    android:id="@+id/situpButton"
+                    android:id="@+id/sitUpButton"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="@color/colorPrimaryGreen"
-                    android:visibility="visible" />
+                    android:gravity="left"
+                    android:padding="10dp"
+                    android:textColor="@android:color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:visibility="visible"
+                    tools:text="@string/sitUp" />
 
             </LinearLayout>
 
