@@ -62,7 +62,7 @@ public class FragmentRunning extends Fragment {
                 handler.sendEmptyMessage(0);
                 break;
             case RUN:
-                endTime = SystemClock.elapsedRealtime() - baseTime;
+                endTime = SystemClock.elapsedRealtime();
                 startButton.setText("시작");
                 status = INIT;
                 handler.removeMessages(0);

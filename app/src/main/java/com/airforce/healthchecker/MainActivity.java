@@ -21,8 +21,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final String PREF_NAME = "SHARE_PREF";
 
+    private BottomNavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,47 +83,56 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("종료", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ArrayList<String> list = getStringArrayPref("endTime");
-                list.add(time);
-                setStringArrayPref("endTime", list);
+                ArrayList<JSONObject> recodeArrayList = getObjectArrayPref("recode");
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("date", new Date().toString());
+                    json.put("time", time);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                recodeArrayList.add(json);
+                setObjectArrayPref("recode", recodeArrayList);
+                navigationView = findViewById(R.id.navigationView); //하단 네비게이션 활성화
+                navigationView.getMenu().getItem(1).setChecked(true);
+                replaceFragment(new FragmentRecode()); //레코드 창 띄우기
             }
         });
         builder.setNegativeButton("일시정지", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                SharedPreferences sharePref = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+                sharePref.edit().clear().commit();
                 FragmentRunning.status = 2;
+
             }
         });
         builder.show();
     }
 
-    private void setStringArrayPref(String key, ArrayList<String> values) {
+    private void setObjectArrayPref(String key, ArrayList<JSONObject> values) {
         SharedPreferences sharePref = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharePref.edit();
-        JSONArray jsonArr = new JSONArray();
 
-        for (String data : values) {
-            jsonArr.put(data);
-        }
         if (!values.isEmpty())
-            editor.putString(key, jsonArr.toString());
+            editor.putString(key, values.toString());
         else
             editor.putString(key, null);
 
         editor.apply();
     }
 
-    public ArrayList<String> getStringArrayPref(String key) {
+    public ArrayList<JSONObject> getObjectArrayPref(String key) {
         SharedPreferences sharePref = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
         String json = sharePref.getString(key, null);
-        ArrayList<String> returnDatas = new ArrayList<String>();
+        ArrayList<JSONObject> returnDatas = new ArrayList<JSONObject>();
 
         if(json != null) {
             try {
                 JSONArray jsonArr = new JSONArray(json);
                 for(int i = 0; i < jsonArr.length(); i++) {
-                    String data = jsonArr.optString(i);
-                    returnDatas.add(data);
+                    JSONObject data = jsonArr.optJSONObject(i);
+                    returnDatas.add(data); //add(data);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

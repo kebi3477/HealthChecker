@@ -7,4 +7,8 @@
     <string name="real_health_rank_lable">실시간 체력 검정 등급</string>
     <string name="real_health_rank">미정</string>
     <string name="start">시작</string>
+
+    <string name="running">달리기</string>
+    <string name="pushUp">팔굽혀펴기</string>
+    <string name="sitUp">윗몸일으키기</string>
 </resources>
