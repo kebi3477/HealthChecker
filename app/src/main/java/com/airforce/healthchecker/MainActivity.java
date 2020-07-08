@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.frameLayout, fragment).commitAllowingStateLoss();
     }
 
-    public void showDialog(String msg, final String time) {
+    public void showDialog(String msg, final String time, final String type) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(msg);
         builder.setPositiveButton("종료", new DialogInterface.OnClickListener() {
@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     json.put("date", format.format(new Date()));
                     json.put("time", time);
+                    json.put("type", type);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
