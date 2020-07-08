@@ -12,23 +12,49 @@ import androidx.fragment.app.Fragment;
 
 import com.airforce.healthchecker.MainActivity;
 import com.airforce.healthchecker.R;
+import com.airforce.healthchecker.util.FragmentUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class FragmentHome extends Fragment {
 
-    Button runningButton, pushUpButton, sitUpButton;
+    private FragmentRunning fragmentRunning = new FragmentRunning();
+    private Button runningButton, pushUpButton, sitUpButton;
     private BottomNavigationView navigationView;
+    final Bundle bundle = new Bundle();
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        navigationView = ((MainActivity)getActivity()).findViewById(R.id.navigationView); //하단 네비게이션 활성화
 
+        navigationView = ((MainActivity)getActivity()).findViewById(R.id.navigationView); //하단 네비게이션 활성화
         runningButton = (Button) view.findViewById(R.id.runLayoutBtn);
+        pushUpButton = (Button) view.findViewById(R.id.pushUpLayoutBtn);
+        sitUpButton = (Button) view.findViewById(R.id.sitUpLayoutBtn);
+
         runningButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                bundle.putString(fragmentRunning.typeKey,"running"); //번들에 데이터 넣기
+                fragmentRunning.setArguments(bundle); //Fragment에 Bundle 넣기
+                navigationView.getMenu().getItem(2).setChecked(true); //하단 아이콘 변경
+                ((MainActivity)getActivity()).replaceFragment(fragmentRunning); //Fragment 교체
+            }
+        });
+        pushUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bundle.putString(fragmentRunning.typeKey,"pushUp");
+                fragmentRunning.setArguments(bundle);
                 navigationView.getMenu().getItem(2).setChecked(true);
-                ((MainActivity)getActivity()).replaceFragment(new FragmentRunning());
+                ((MainActivity)getActivity()).replaceFragment(fragmentRunning);
+            }
+        });
+        sitUpButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                bundle.putString(fragmentRunning.typeKey,"sitUp");
+                fragmentRunning.setArguments(bundle);
+                navigationView.getMenu().getItem(2).setChecked(true);
+                ((MainActivity)getActivity()).replaceFragment(fragmentRunning);
             }
         });
 

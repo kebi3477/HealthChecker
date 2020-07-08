@@ -14,10 +14,10 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/circle_layout"
             android:layout_width="360dp"
             android:layout_height="360dp"
             android:background="@drawable/circle"
-            android:backgroundTint="@color/colorLightGray"
             android:gravity="center"
             android:orientation="vertical">
 
