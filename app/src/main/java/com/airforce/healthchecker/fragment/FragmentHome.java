@@ -23,7 +23,7 @@ public class FragmentHome extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         navigationView = ((MainActivity)getActivity()).findViewById(R.id.navigationView); //하단 네비게이션 활성화
 
-        runningButton = (Button) view.findViewById(R.id.runningButton);
+        runningButton = (Button) view.findViewById(R.id.runLayoutBtn);
         runningButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
