@@ -23,6 +23,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -85,8 +87,9 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 ArrayList<JSONObject> recodeArrayList = getObjectArrayPref("recode");
                 JSONObject json = new JSONObject();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd kk:mm:ss");
                 try {
-                    json.put("date", new Date().toString());
+                    json.put("date", format.format(new Date()));
                     json.put("time", time);
                 } catch (JSONException e) {
                     e.printStackTrace();
