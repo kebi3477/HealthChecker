@@ -18,6 +18,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <Button
@@ -25,13 +26,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:text="이전" />
+                android:text="@string/prev" />
 
             <TextView
                 android:id="@+id/dateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:minWidth="100dp"
                 android:text="@string/date_text"
                 android:textAlignment="center"
                 app:layout_constraintTop_toTopOf="parent"
@@ -42,67 +43,80 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
-                android:text="다음" />
+                android:text="@string/next" />
+
         </LinearLayout>
 
         <View
             android:id="@+id/view3"
             android:layout_width="wrap_content"
-            android:layout_height="153dp"
+            android:layout_height="150dp"
             android:layout_margin="10dp"
             android:background="@color/colorLightGray"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="0dp" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="350dp"
+            android:layout_height="50dp"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/button7"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageButton
+                android:id="@+id/runImageButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
+                android:adjustViewBounds="true"
                 android:background="@drawable/rounded"
                 android:backgroundTint="@color/colorPrimaryBlue"
-                android:text="Button" />
+                android:contentDescription="@string/running"
+                android:maxWidth="120dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@mipmap/running" />
 
-            <Button
-                android:id="@+id/button8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <ImageButton
+                android:id="@+id/pushUpImageButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_marginStart="5dp"
                 android:layout_marginEnd="5dp"
                 android:layout_weight="1"
+                android:adjustViewBounds="true"
                 android:background="@drawable/rounded"
                 android:backgroundTint="@color/colorPrimaryRed"
-                android:text="Button" />
+                android:contentDescription="@string/pushUp"
+                android:maxWidth="120dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@mipmap/pushup" />
 
-            <Button
-                android:id="@+id/button9"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
+            <ImageButton
+                android:id="@+id/sitUpImageButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
                 android:layout_weight="1"
+                android:adjustViewBounds="true"
                 android:background="@drawable/rounded"
                 android:backgroundTint="@color/colorPrimaryGreen"
-                android:text="Button" />
+                android:contentDescription="@string/sitUp"
+                android:maxWidth="120dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@mipmap/situp" />
 
         </LinearLayout>
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp">
 
             <LinearLayout
                 android:id="@+id/recodeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="10dp" />
+                android:orientation="vertical" />
         </ScrollView>
 
     </LinearLayout>
