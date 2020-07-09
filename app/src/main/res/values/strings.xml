@@ -11,4 +11,7 @@
     <string name="running">달리기</string>
     <string name="pushUp">팔굽혀펴기</string>
     <string name="sitUp">윗몸일으키기</string>
+
+    <string name="prev">이전</string>
+    <string name="next">다음</string>
 </resources>

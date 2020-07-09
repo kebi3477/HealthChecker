@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,13 +12,12 @@ import androidx.fragment.app.Fragment;
 
 import com.airforce.healthchecker.MainActivity;
 import com.airforce.healthchecker.R;
-import com.airforce.healthchecker.util.FragmentUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class FragmentHome extends Fragment {
 
     private FragmentRunning fragmentRunning = new FragmentRunning();
-    private Button runningButton, pushUpButton, sitUpButton;
+    private LinearLayout runningButton, pushUpButton, sitUpButton;
     private BottomNavigationView navigationView;
     final Bundle bundle = new Bundle();
 
@@ -26,9 +25,9 @@ public class FragmentHome extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         navigationView = ((MainActivity)getActivity()).findViewById(R.id.navigationView); //하단 네비게이션 활성화
-        runningButton = (Button) view.findViewById(R.id.runLayoutBtn);
-        pushUpButton = (Button) view.findViewById(R.id.pushUpLayoutBtn);
-        sitUpButton = (Button) view.findViewById(R.id.sitUpLayoutBtn);
+        runningButton = (LinearLayout) view.findViewById(R.id.runLayoutBtn);
+        pushUpButton = (LinearLayout) view.findViewById(R.id.pushUpLayoutBtn);
+        sitUpButton = (LinearLayout) view.findViewById(R.id.sitUpLayoutBtn);
 
         runningButton.setOnClickListener(new View.OnClickListener() {
             @Override

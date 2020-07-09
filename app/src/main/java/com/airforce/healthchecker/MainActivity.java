@@ -23,10 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,8 +43,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.frameLayout, fragmentHome).commitAllowingStateLoss();
+        replaceFragment(fragmentHome);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new ItemSelectedListener());
@@ -79,22 +75,13 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.frameLayout, fragment).commitAllowingStateLoss();
     }
 
-    public void showDialog(String msg, final String time, final String type) {
+    public void showDialog(String msg, final JSONObject json) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(msg);
         builder.setPositiveButton("종료", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 ArrayList<JSONObject> recodeArrayList = getObjectArrayPref("recode");
-                JSONObject json = new JSONObject();
-                SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd kk:mm:ss");
-                try {
-                    json.put("date", format.format(new Date()));
-                    json.put("time", time);
-                    json.put("type", type);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
                 recodeArrayList.add(json);
                 setObjectArrayPref("recode", recodeArrayList);
                 navigationView = findViewById(R.id.navigationView); //하단 네비게이션 활성화
@@ -108,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences sharePref = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
                 sharePref.edit().clear().commit();
                 FragmentRunning.status = 2;
-
             }
         });
         builder.show();
