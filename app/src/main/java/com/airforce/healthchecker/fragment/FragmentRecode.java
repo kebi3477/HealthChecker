@@ -1,9 +1,7 @@
 package com.airforce.healthchecker.fragment;
 
 import android.annotation.SuppressLint;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,45 +18,53 @@ import com.airforce.healthchecker.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class FragmentRecode extends Fragment {
 
     private ImageButton runImageBtn, pushUpImageBtn, sitUpImageBtn;
+    private Map<String, Boolean> btnFlag;
     private LinearLayout recodeLayout;
     private String type = null;
+    private ArrayList<JSONObject> recodeList;
 
     @SuppressLint({"ResourceAsColor", "WrongViewCast"})
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recode, container, false);
-        final ArrayList<JSONObject> recodeList = ((MainActivity)getActivity()).getObjectArrayPref("recode");
+        recodeList = ((MainActivity)getActivity()).getObjectArrayPref("recode");
         recodeLayout = view.findViewById(R.id.recodeLayout);
+        btnFlag  = new HashMap<String, Boolean>() {
+            {put("running", true); put("pushUp", true); put("sitUp", true);}
+        };
 
         runImageBtn = (ImageButton) view.findViewById(R.id.runImageButton);
         pushUpImageBtn = (ImageButton) view.findViewById(R.id.pushUpImageButton);
         sitUpImageBtn = (ImageButton) view.findViewById(R.id.sitUpImageButton);
 
+        // running button
         runImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<JSONObject> filtered = filteredType(recodeList, "running");
-                createRecodesLayouts(filtered);
+                onClickSortButton("running", runImageBtn, R.color.colorPrimaryBlue, R.color.colorLightGray);
             }
         });
+
+        // pushUp button
         pushUpImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<JSONObject> filtered = filteredType(recodeList, "pushUp");
-                createRecodesLayouts(filtered);
+                onClickSortButton("pushUp", pushUpImageBtn, R.color.colorPrimaryRed, R.color.colorLightGray);
             }
         });
+
+        // sitUp button
         sitUpImageBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ArrayList<JSONObject> filtered = filteredType(recodeList, "sitUp");
-                createRecodesLayouts(filtered);
+                onClickSortButton("sitUp", sitUpImageBtn, R.color.colorPrimaryGreen, R.color.colorLightGray);
             }
         });
 
@@ -104,19 +110,14 @@ public class FragmentRecode extends Fragment {
         }
     }
 
-    private ArrayList<JSONObject> filteredType(ArrayList<JSONObject> recodesList ,String type) {
+    private ArrayList<JSONObject> filteredType(ArrayList<JSONObject> recodesList) {
         try {
             ArrayList<JSONObject> filtered = new ArrayList<JSONObject>();
             for(JSONObject json : recodesList) {
-                if(json.get("type").equals(type))
-                    filtered.add(json);
+                if(btnFlag.get("running") && json.get("type").equals("running")) filtered.add(json);
+                if(btnFlag.get("pushUp") && json.get("type").equals("pushUp")) filtered.add(json);
+                if(btnFlag.get("sitUp") && json.get("type").equals("sitUp")) filtered.add(json);
             }
-
-//            for (int i = 0; i < JA1.length(); i++) {
-//                JSONObject json_data = jsonArray.getJSONObject(i);
-//                name[i] = json_data.getString("tienda");
-//            }
-
             return filtered;
         } catch (JSONException e) {
             e.printStackTrace();
@@ -124,5 +125,16 @@ public class FragmentRecode extends Fragment {
         }
     }
 
+    private void onClickSortButton(String type, ImageButton button, int activeColor, int inactiveColor) {
+        Boolean targetActive = !btnFlag.get(type);
+        btnFlag.put(type, targetActive);
 
+        if(targetActive)
+            button.setBackgroundColor(getResources().getColor(activeColor));
+        else
+            button.setBackgroundColor(getResources().getColor(inactiveColor));
+
+        ArrayList<JSONObject> filtered = filteredType(recodeList);
+        createRecodesLayouts(filtered);
+    }
 }

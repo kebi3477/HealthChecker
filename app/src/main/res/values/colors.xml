@@ -15,7 +15,10 @@
     <color name="colorPrimaryGray">#555555</color>
     <color name="colorPrimaryRipple">#3333336e</color>
     <color name="colorBackground">#F3F3F3</color>
+
     <color name="colorLightGray">#E2E2E2</color>
     <color name="colorLightLightGray">#f5f5f5</color>
+
+    <color name="colorPrimaryOrange">#FF6845</color>
 
 </resources>
