@@ -2,6 +2,7 @@ package com.airforce.healthchecker.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -51,35 +52,32 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
     public static final String typeKey = "type";
 
     //--------------센서 변수 추가---------------------------
-    private SensorManager sensorManager;
-    private Sensor linearAccelSensor;
-    private Sensor accelSensor;
-    private Sensor orientationSensor;
-
-    //calc
-    boolean isMove = false;
     boolean isRunning = false;
-    double vectorDegree = 0;
-    double vectorDistance = 0;
-    double[] orientationData = {0,0,0};
-    double[] linearAccelData = {0,0,0};
-    double[] accelTestData = {0,0,0};
-    int lowSpeedCounter =0;
+    double rotate[] = new double[9];
+    double acc[] = new double[3];
+    float[] rotationMatrix = new float[9];
+    double[] speed=new double[3];
+    double[] distanceOneSecond=new double[3];
+    double[] delta=new double[3];
+    double totalDistance=0;
+    float[] previousAccelData=new float[3];
+    int smallChangeCount =0;
+    int lowValueCount =0;
+    long startSTEP = 0;
+    long currentSTEP = 0;
+    long lastTime = System.currentTimeMillis();
 
-    //test
-    double total = 0;
-    double oneSecondTotal = 0;
-    double oneSecondCount = 0;;
-    double[] oneSecondAccel = {0,0};
-    double[] currentSpeed ={0,0};
-    double[] result = {0,0,0};
-    double[] resultIntegral = {0,0,0};//x,y,count
-    boolean isInit = false;
-    double[] accelTestOffset = {0,0,0};//x,y,count
-
-    //lpf
-    public lpf lpfX;
-    public lpf lpfY;
+    private SensorManager sensorManager;
+    private Sensor accelSensor;
+    private Sensor rotateSensor;
+    private Sensor stepSensor;
+    TextView value0;
+    TextView value1;
+    TextView value2;
+    TextView value3;
+    TextView value4;
+    TextView value5;
+    TextView value6;
     //--------------변수 선언 끝-----------------------
 
 
@@ -106,151 +104,67 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
         });
 
         //--------------------------------------
-        if(type.equals("running")){
-            total=0;
-            lpfX = new lpf();
-            lpfY = new lpf();
-            sensorManager =
-                    (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-            linearAccelSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        if(type.equals("running")) {
+            sensorManager = (SensorManager)getActivity().getSystemService(Context.SENSOR_SERVICE);
             accelSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            orientationSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-            SensorEventListener sensorListener;
+            rotateSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+            stepSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    if (oneSecondCount > 0 && isRunning == true) {
-                        double tempAX = currentSpeed[0];
-                        double tempAY = currentSpeed[1];
-                        double tempBX = oneSecondAccel[0] / oneSecondCount / 2;
-                        double tempBY = oneSecondAccel[1] / oneSecondCount / 2;
-                        lowSpeedCounter = 0;
-                        vectorDegree =
-                                Math.atan((tempAX + tempBX) / (tempAY + tempBY));
-                        vectorDistance =
-                                Math.sqrt(pow(tempAX + tempBX) + pow(tempAY + tempBY));
-                        if ((Math.sqrt(pow(tempBX) + pow(tempBX)) < 3.5)) { //이상 데이터 필터링
-                            currentSpeed[0] += tempBX;
-                            currentSpeed[1] += tempBY;
-                        }
-                        Log.d("result", String.format("%.4fm",
-                                currentSpeed[0]) + "/" + String.format("%.4fm",
-                                currentSpeed[1]) + "/" + String.format("%.4fm",
-                                tempBX) + "/" + String.format("%.4fm",
-                                tempBY) + "/");
-                        total += (Math.sqrt(pow(currentSpeed[0]) + pow(currentSpeed[1])));
-                        oneSecondAccel[0] = 0;
-                        oneSecondAccel[1] = 0;
-                        oneSecondCount = 0;
-                    }
+                    totalDistance += Math.sqrt(Math.pow(distanceOneSecond[0], 2) + Math.pow(distanceOneSecond[1], 2));
+                    distanceOneSecond[0] = 0;
+                    distanceOneSecond[1] = 0;
+                    Log.d("totalDistance", String.format("%.4f", totalDistance));
                 }
             };
             Timer timer = new Timer();
             timer.schedule(timerTask, 1000, 1000);
-            sensorListener = new SensorEventListener() {
-                @Override
-                public void onAccuracyChanged(Sensor arg0, int arg1) {
-                }
+
+
+            SensorEventListener sensorListener = new SensorEventListener() {
 
                 @Override
                 public void onSensorChanged(SensorEvent event) {
                     Sensor sensor = event.sensor;
-                    if (sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION) {
-                        Log.d("ACCELEROMETER", "");
-                        linearAccelData[0] = event.values[0];
-                        linearAccelData[1] = event.values[1];
-                        linearAccelData[2] = event.values[2];
-                        if (isInit == false) {/*
-                        accelTestOffset[0] = event.values[0];
-                        accelTestOffset[1] = event.values[1];
-                        accelTestOffset[2] = event.values[2];*/
-                            isInit = true;
-                        }
-                        double accelration = Math.sqrt(pow(linearAccelData[0]) + pow(linearAccelData[1]) + pow(linearAccelData[2]));
-                        if (currentSpeed[0] < 0.5 && accelration < 0.5) {
-                            isMove = false;
-                            currentSpeed[0] = 0;
-                            currentSpeed[1] = 0;
-                        } else if (currentSpeed[0] > 0.5 && accelration < 0.05) {
-                            isMove = true;
-                            currentSpeed[0] = 0.05;
-                            currentSpeed[1] = 0.05;
-                            lowSpeedCounter++;
-                            if (lowSpeedCounter > 4) {
-                                isMove = false;
-                                currentSpeed[0] = 0;
-                                currentSpeed[1] = 0;
-                            }
-                        } else {
-                            isMove = true;
-                        }
-                    }
-                    if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {/*
-
-                    accelTestData[0] = event.values[0]-accelTestOffset[0];
-                    accelTestData[1] = event.values[1]-accelTestOffset[1];
-                    accelTestData[2] = event.values[2]-accelTestOffset[2];*/
-                        accelTestData[0] = event.values[0];
-                        accelTestData[1] = event.values[1];
-                        accelTestData[2] = event.values[2];
+                    if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+//                    SensorManager.getRotationMatrixFromVector(rotate,event.values);
+//                    Log.d("Rotaeion value",String.format("%.4f",rotate[0])+String.format("%.4f",rotate[1])+String.format("%.4f",rotate[2])+
+//                            String.format("%.4f",rotate[3])+String.format("%.4f",rotate[4])+String.format("%.4f",rotate[5])+
+//                            String.format("%.4f",rotate[6])+String.format("%.4f",rotate[7])+String.format("%.4f",rotate[8]));
+                        newAcceleration(event.values);
                         if(isRunning==true)
-                            countTextView.setText(String.format("%.2fkm",total/1000));
+                            countTextView.setText(String.format("%.2fkm",totalDistance/1000));
 
-                        if (isMove == true) {
-                            double[] buffer = {accelTestData[2], accelTestData[0], accelTestData[1]};
-                            double[] resultBuffer = matrix_mul(buffer, euler(orientationData));
-                            double[] filterdAccel = {0, 0};
-                            resultIntegral[0] += lpfX.lpfCalc(resultBuffer[1]);
-                            resultIntegral[1] += lpfY.lpfCalc(resultBuffer[2]);
-                            resultIntegral[2]++;
-                            result = matrix_mul(linearAccelData,
-                                    euler(orientationData));
-
-
-                            //=============================================================================
-                            double degreeData = 0;
-                            double distanceData = 0;
-                            double calcDistance;
-                            degreeData = atan(result[2] / result[0]);
-                            distanceData =
-                                    Math.sqrt(pow(result[0]) + pow(result[2]));
-
-                            if (result[0] < 25 && result[2] < 25) {
-                                oneSecondAccel[0] += result[0];
-                                oneSecondAccel[1] += result[2];
-
-                                oneSecondCount++;
-                                Log.d("accel", "under 25");
-                            } else {
-                                Log.d("accel", String.format("%.4fm",
-                                        result[0]) + "/" + String.format("%.4fm/s",
-                                        result[2]));
-                                Log.d("accel", "Over 25");
-                            }
-
-
-                        } else {
-                            resultIntegral[0] += lpfX.lpfCalc(0);
-                            resultIntegral[1] += lpfY.lpfCalc(0);
-                            resultIntegral[2]++;
-                            result = matrix_mul(linearAccelData, euler(orientationData));
-                        }
                     }
-                    if (sensor.getType() == Sensor.TYPE_ORIENTATION) {
-                        Log.d("ORIENTATION", "");
-                        orientationData[0] = event.values[0] / 180 * Math.PI;
-                        orientationData[1] = event.values[1] / 180 * Math.PI;
-                        orientationData[2] = event.values[2] / 180 * Math.PI;
+                    if (sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+                        newRotationVector(event.values);
+//                    for (int i = 0; i < 3; i++) {
+//                        acc[i] = (event.values[0]* rotate[i * 3] + event.values[1]* rotate[i * 3 + 1]
+//                                + event.values[2] * rotate[i * 3 + 2]);
+//                    }
+//                    Log.d("Function Test","X:"+String.format("%.4f",acc[0])+"    Y:"+String.format("%.4f",acc[1])+"     Z:"+String.format("%.4f",acc[2]));
+                    }
+                    if (sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
+                        if (startSTEP == 0) {
+                            startSTEP = (long) event.values[0];
+                        }
+                        currentSTEP = (long) (event.values[0] - startSTEP);
+                        Log.d("raw", "STEP" + event.values[0]);
                     }
                 }
-            };
-            sensorManager.registerListener(sensorListener, linearAccelSensor,
-                    SensorManager.SENSOR_DELAY_GAME);
-            sensorManager.registerListener(sensorListener, orientationSensor,
-                    SensorManager.SENSOR_DELAY_GAME);
-            sensorManager.registerListener(sensorListener, accelSensor,
-                    SensorManager.SENSOR_DELAY_GAME);
 
+                @Override
+                public void onAccuracyChanged(Sensor sensor, int accuracy) {
+                }
+            };
+            sensorManager.registerListener(sensorListener, accelSensor,
+                    SensorManager.SENSOR_DELAY_FASTEST);
+            sensorManager.registerListener(sensorListener, rotateSensor,
+                    SensorManager.SENSOR_DELAY_FASTEST);
+            sensorManager.registerListener(sensorListener, stepSensor,
+                    SensorManager.SENSOR_DELAY_NORMAL);
         }
          //---------------------------------------
 
@@ -333,36 +247,7 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
     }
 //------------------------------------------------
 
-    double[][] euler(double[] data){
-        double[][] result={
-                {
-                        cos(data[1])*cos(data[2]),
-                        cos(data[1])*sin(data[2]),
-                        -sin(data[1])
-                },
-                {
-                        sin(data[0])*sin(data[1])*cos(data[2])-cos(data[0])*sin(data[2]),
-                        sin(data[0])*sin(data[1])*sin(data[2])+cos(data[0])*cos(data[2]),
-                        sin(data[0])*cos(data[1])
-                },
-                {
-                        cos(data[0])*sin(data[1])*cos(data[2])+sin(data[0])*sin(data[2]),
-                        cos(data[0])*sin(data[1])*sin(data[2])-sin(data[0])*cos(data[2]),
-                        cos(data[0])*cos(data[1])
-                }
-        };
-        return result;
-    }
 
-    double[] matrix_mul(double[] A, double[][]B) {
-        double[] C = new double[3];
-        for(int i=0; i<3; i++) {
-            for(int j=0; j<3; j++) {
-                C[i] += (B[i][j] * A[j]);
-            }
-        }
-        return C;
-    }
 
     @Override
     public void onResume(){
@@ -374,7 +259,155 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
         super.onPause();
         if(sensorManager!=null)
             sensorManager.unregisterListener(this);
+    }@Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+    }
+    // Manage acceleration value
+    private void newAcceleration(float[] acceleration) {
+        float[] vector = acceleration;
+        float[] orientaionValueForTest =new float[3] ;
+        long interval = (System.currentTimeMillis()-lastTime);
+
+        lastTime = System.currentTimeMillis();
+        Log.d("rotationMatrix", String.format("%.4f",rotationMatrix[0])+"    "+
+                String.format("%.4f",rotationMatrix[1])+"    "+
+                String.format("%.4f",rotationMatrix[2])+"    "+"\n"+"                                                                         "+
+                String.format("%.4f",rotationMatrix[3])+"    "+
+                String.format("%.4f",rotationMatrix[4])+"    "+
+                String.format("%.4f",rotationMatrix[5])+"    "+"\n"+"                                                                         "+
+                String.format("%.4f",rotationMatrix[6])+"    "+
+                String.format("%.4f",rotationMatrix[7])+"    "+
+                String.format("%.4f",rotationMatrix[8])+"    "+"\n"
+        );
+        vector = preFilter(rotateVector3(vector,rotationMatrix));
+
+        vector = postFilter(vector);
+
+
+        //--debug start--
+        SensorManager.getOrientation(rotationMatrix, orientaionValueForTest);
+        convertToDegrees(orientaionValueForTest);
+        //--debug end--
+
+        speed[0]+=vector[0]*interval/1000.0;
+        speed[1]+=vector[1]*interval/1000.0;
+        //speed[2]+=vector[2;
+        distanceOneSecond[0]+=speed[0]*interval/1000.0;
+        distanceOneSecond[1]+=speed[1]*interval/1000.0;
+        //distanceOneSecond[2]+=speed[2]*interval/1000.0;
+
+        Log.d("acceleration", "Interval:"+interval/1000.0+ "    X:"+String.format("%.4f",vector[0])+"    Y:"+String.format("%.4f",vector[1])+"    Z:"+String.format("%.4f",vector[2]));
+        Log.d("speed", "X:"+String.format("%.4f",speed[0])+"    Y:"+String.format("%.4f",speed[1])+"    Z:"+String.format("%.4f",speed[2]));
+        Log.d("distanceOneSecond", "X:"+String.format("%.4f",distanceOneSecond[0])+"    Y:"+String.format("%.4f",distanceOneSecond[1])+"    Z:"+String.format("%.4f",distanceOneSecond[2]));
+
+        previousAccelData = vector;
+        //        val direction = Vector3.fromFloatArray(vector);
+
+
+
+
+    }
+
+    // Manage gyroscope value
+    private void newRotationVector(float[] quaternion) {
+        SensorManager.getRotationMatrixFromVector(rotationMatrix, quaternion);
+    }
+
+    float[] rotateVector3(float[] vector,float[] rotationMatrix){
+        float[] newVector = new float[3];
+        for(int i=0;i<3;i++) {
+            double s = 0;
+            for(int j=0;j<3;j++) {
+                s += (double)vector[j] * (double)rotationMatrix[j+i*3];
+            }
+            newVector[i] = (float)s;
+        }
+        return newVector;
+    }
+
+    float[] preFilter(float[] data){
+        double movingDistance=Math.sqrt(Math.pow(data[0]-previousAccelData[0],2)+Math.pow(data[1] - previousAccelData[1],2));
+        if(Math.abs(movingDistance)<0.2){
+            smallChangeCount++;
+        }else if(movingDistance>1){
+            smallChangeCount=0;
+        }
+        if(smallChangeCount>10){
+            data[0]*=0.1;
+            data[1]*=0.1;
+        }
+        if(smallChangeCount>30){
+            speed[0]*=0.1;
+            speed[1]*=0.1;
+        }
+
+        if(Math.abs(data[0])<0.010||Math.abs(data[1])<0.010){
+            lowValueCount++;
+        }
+        if(lowValueCount>10){
+            data[0]=0;
+            data[1]=0;
+            lowValueCount-=10;
+        }
+
+        return data;
+    }
+
+    private void convertToDegrees(float[] vector){
+        for (int i = 0; i < vector.length; i++){
+            vector[i] = Math.round(Math.toDegrees(vector[i]));
+        }
+    }
+
+    float[] postFilter(float[] data){
+        if(Math.abs(data[0])>3)data[0]=data[0]>0?3:-3;
+        if(Math.abs(data[1])>3)data[1]=data[1]>0?3:-3;
+
+
+        return data;
+    }
+    int stepConverter(float speed,float height){
+        speed= (float) (1609.344/speed/60);
+        return (int)(1997-(5.31496*(height-152.4))-(speed-12)*143.5);
+    }
+
+
+
+    /*
+        double[][] euler(double[] data){
+            double[][] result={
+                    {
+                            cos(data[1])*cos(data[2]),
+                            cos(data[1])*sin(data[2]),
+                            -sin(data[1])
+                    },
+                    {
+                            sin(data[0])*sin(data[1])*cos(data[2])-cos(data[0])*sin(data[2]),
+                            sin(data[0])*sin(data[1])*sin(data[2])+cos(data[0])*cos(data[2]),
+                            sin(data[0])*cos(data[1])
+                    },
+                    {
+                            cos(data[0])*sin(data[1])*cos(data[2])+sin(data[0])*sin(data[2]),
+                            cos(data[0])*sin(data[1])*sin(data[2])-sin(data[0])*cos(data[2]),
+                            cos(data[0])*cos(data[1])
+                    }
+            };
+            return result;
+        }
+
+        double[] matrix_mul(double[] A, double[][]B) {
+            double[] C = new double[3];
+            for(int i=0; i<3; i++) {
+                for(int j=0; j<3; j++) {
+                    C[i] += (B[i][j] * A[j]);
+                }
+            }
+            return C;
+        }*/
+    /*
     @Override
     public void onSensorChanged(SensorEvent event) {
     }
@@ -393,5 +426,6 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
     }double pow(double a){
         return Math.pow(a,2);
     }
+    */
     //----------------------------------------------
 }
