@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="60dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/gift_ok_length"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimaryOrange"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/giftDistance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="29km"
+                android:textAlignment="center"
+                android:textColor="@color/colorPrimaryOrange"
+                android:textIsSelectable="false"
+                android:textSize="70sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="50dp"
+                        android:background="@color/colorPrimaryBlue"
+                        android:paddingLeft="2000dp"
+                        app:srcCompat="@android:drawable/arrow_down_float" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/imageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/running"
+                        android:scaleType="matrix"
+                        app:srcCompat="@mipmap/track" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-250dp"
+                    android:baselineAligned="true"
+                    android:orientation="horizontal"
+                    android:paddingLeft="180dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="80dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/giftBox1"
+                            android:layout_width="250dp"
+                            android:layout_height="200dp"
+                            android:background="@android:color/transparent"
+                            android:contentDescription="@string/gift"
+                            android:scaleType="fitCenter"
+                            app:srcCompat="@mipmap/gift_close" />
+
+                        <TextView
+                            android:id="@+id/giftGoal1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="25dp"
+                            android:text="@string/gift_goal1"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorPrimaryOrange"
+                            android:textSize="25sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="80dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/giftBox2"
+                            android:layout_width="250dp"
+                            android:layout_height="200dp"
+                            android:background="@android:color/transparent"
+                            android:contentDescription="@string/gift"
+                            android:scaleType="fitCenter"
+                            app:srcCompat="@mipmap/gift_close" />
+
+                        <TextView
+                            android:id="@+id/giftGoal2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="25dp"
+                            android:text="@string/gift_goal2"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorPrimaryOrange"
+                            android:textSize="25sp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="80dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/giftBox3"
+                            android:layout_width="250dp"
+                            android:layout_height="200dp"
+                            android:background="@android:color/transparent"
+                            android:contentDescription="@string/gift"
+                            android:scaleType="fitCenter"
+                            app:srcCompat="@mipmap/gift_close" />
+
+                        <TextView
+                            android:id="@+id/giftGoal3"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="25dp"
+                            android:text="@string/gift_goal3"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorPrimaryOrange"
+                            android:textSize="25sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="80dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/giftBox4"
+                            android:layout_width="250dp"
+                            android:layout_height="200dp"
+                            android:background="@android:color/transparent"
+                            android:contentDescription="@string/gift"
+                            android:scaleType="fitCenter"
+                            app:srcCompat="@mipmap/gift_close" />
+
+                        <TextView
+                            android:id="@+id/giftGoal4"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="25dp"
+                            android:text="@string/gift_goal4"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorPrimaryOrange"
+                            android:textSize="25sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginHorizontal="80dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageButton
+                            android:id="@+id/giftBox5"
+                            android:layout_width="250dp"
+                            android:layout_height="200dp"
+                            android:background="@android:color/transparent"
+                            android:contentDescription="@string/gift"
+                            android:scaleType="fitCenter"
+                            app:srcCompat="@mipmap/gift_close" />
+
+                        <TextView
+                            android:id="@+id/giftGoal5"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="25dp"
+                            android:text="@string/gift_goal5"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorPrimaryOrange"
+                            android:textSize="25sp" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

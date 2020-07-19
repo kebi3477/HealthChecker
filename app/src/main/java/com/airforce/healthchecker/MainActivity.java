@@ -12,8 +12,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.MenuItem;
 
+
 import com.airforce.healthchecker.fragment.FragmentHome;
-import com.airforce.healthchecker.fragment.FragmentRanking;
+import com.airforce.healthchecker.fragment.FragmentGift;
 import com.airforce.healthchecker.fragment.FragmentRecode;
 import com.airforce.healthchecker.fragment.FragmentRunning;
 import com.airforce.healthchecker.fragment.FragmentStrength;
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentHome fragmentHome = new FragmentHome();
     private FragmentRecode fragmentRecode = new FragmentRecode();
     private FragmentStrength fragmentStrength = new FragmentStrength();
-    private FragmentRanking fragmentRanking = new FragmentRanking();
+    private FragmentGift fragmentGift = new FragmentGift();
     private FragmentRunning fragmentRunning = new FragmentRunning();
 
     private final String PREF_NAME = "SHARE_PREF";
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(fragmentStrength);
                     break;
                 case R.id.rankingItem:
-                    replaceFragment(fragmentRanking);
+                    replaceFragment(fragmentGift);
                     break;
             }
             return true;
