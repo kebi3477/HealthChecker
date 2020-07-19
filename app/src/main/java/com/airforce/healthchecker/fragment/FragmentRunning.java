@@ -1,6 +1,7 @@
 package com.airforce.healthchecker.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import com.airforce.healthchecker.MainActivity;
@@ -41,6 +43,7 @@ public class FragmentRunning extends Fragment {
     public long baseTime, endTime; //타이머 시간 값을 저장할 변수
     public String type;
     public static final String typeKey = "type";
+    private boolean running;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_running, container, false);
@@ -51,7 +54,12 @@ public class FragmentRunning extends Fragment {
         timeTextView = (TextView) view.findViewById(R.id.timeView);
         countTextView = (TextView) view.findViewById(R.id.countView);
 
-        if(type.equals("pushUp") || type.equals("sitUp")) countTextView.setText("0회");
+        if(type.equals("pushUp") || type.equals("sitUp")) {
+            countTextView.setText("00:00:00");
+            timeTextView.setText("");
+            view.findViewById(R.id.realHealthRank).setVisibility(View.INVISIBLE);
+            view.findViewById(R.id.realHealthRankLable).setVisibility(View.INVISIBLE);
+        }
 
         startButton.setOnClickListener(new View.OnClickListener() { //버튼 클릭 이벤트
             @Override
@@ -70,9 +78,10 @@ public class FragmentRunning extends Fragment {
     @SuppressLint("ResourceAsColor")
     private void start() {
         int circle = 0;
-        if(type.equals("running"))  circle = R.drawable.circle_running;
+        if(type.equals("running")) circle = R.drawable.circle_running;
         else if(type.equals("pushUp")) circle = R.drawable.circle_pushup;
         else circle = R.drawable.circle_situp;
+        running = (type.equals("running")) ? true : false;
 
         switch (status) {
             case INIT:
@@ -104,8 +113,14 @@ public class FragmentRunning extends Fragment {
     Handler handler = new Handler() { //타임워치 핸들러
         @Override
         public void handleMessage(@NonNull Message msg) {
-            timeTextView.setText(getTimeOut());
-            handler.sendEmptyMessage(0);
+            if (running)
+                timeTextView.setText(getTimeOut());
+            else {
+                timeTextView.setText("");
+                countTextView.setText(getTimeOut());
+            }
+
+            handler.sendEmptyMessage(   0);
         }
     };
 
