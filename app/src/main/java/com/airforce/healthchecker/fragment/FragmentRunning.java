@@ -1,7 +1,10 @@
 package com.airforce.healthchecker.fragment;
 
 import android.annotation.SuppressLint;
+<<<<<<< HEAD
 import android.content.res.ColorStateList;
+=======
+>>>>>>> origin/master
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,7 +19,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+<<<<<<< HEAD
 import androidx.core.content.res.ResourcesCompat;
+=======
+>>>>>>> origin/master
 import androidx.fragment.app.Fragment;
 
 import com.airforce.healthchecker.MainActivity;
@@ -43,7 +49,10 @@ public class FragmentRunning extends Fragment {
     public long baseTime, endTime; //타이머 시간 값을 저장할 변수
     public String type;
     public static final String typeKey = "type";
+<<<<<<< HEAD
     private boolean running;
+=======
+>>>>>>> origin/master
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_running, container, false);
@@ -54,12 +63,16 @@ public class FragmentRunning extends Fragment {
         timeTextView = (TextView) view.findViewById(R.id.timeView);
         countTextView = (TextView) view.findViewById(R.id.countView);
 
+<<<<<<< HEAD
         if(type.equals("pushUp") || type.equals("sitUp")) {
             countTextView.setText("00:00:00");
             timeTextView.setText("");
             view.findViewById(R.id.realHealthRank).setVisibility(View.INVISIBLE);
             view.findViewById(R.id.realHealthRankLable).setVisibility(View.INVISIBLE);
         }
+=======
+        if(type.equals("pushUp") || type.equals("sitUp")) countTextView.setText("0회");
+>>>>>>> origin/master
 
         startButton.setOnClickListener(new View.OnClickListener() { //버튼 클릭 이벤트
             @Override
@@ -78,10 +91,16 @@ public class FragmentRunning extends Fragment {
     @SuppressLint("ResourceAsColor")
     private void start() {
         int circle = 0;
+<<<<<<< HEAD
         if(type.equals("running")) circle = R.drawable.circle_running;
         else if(type.equals("pushUp")) circle = R.drawable.circle_pushup;
         else circle = R.drawable.circle_situp;
         running = (type.equals("running")) ? true : false;
+=======
+        if(type.equals("running"))  circle = R.drawable.circle_running;
+        else if(type.equals("pushUp")) circle = R.drawable.circle_pushup;
+        else circle = R.drawable.circle_situp;
+>>>>>>> origin/master
 
         switch (status) {
             case INIT:
@@ -113,6 +132,7 @@ public class FragmentRunning extends Fragment {
     Handler handler = new Handler() { //타임워치 핸들러
         @Override
         public void handleMessage(@NonNull Message msg) {
+<<<<<<< HEAD
             if (running)
                 timeTextView.setText(getTimeOut());
             else {
@@ -121,6 +141,10 @@ public class FragmentRunning extends Fragment {
             }
 
             handler.sendEmptyMessage(   0);
+=======
+            timeTextView.setText(getTimeOut());
+            handler.sendEmptyMessage(0);
+>>>>>>> origin/master
         }
     };
 
