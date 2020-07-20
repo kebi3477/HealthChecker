@@ -12,10 +12,17 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.airforce.healthchecker.MainActivity;
 import com.airforce.healthchecker.R;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +33,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,6 +46,7 @@ public class FragmentRecode extends Fragment {
     private Button prevButton, nextButton;
     private Map<String, Boolean> btnFlag;
     private LinearLayout recodeLayout;
+    private LineChart recodeChart;
     private String type = null;
     private ArrayList<JSONObject> recodeList;
 
@@ -46,6 +55,7 @@ public class FragmentRecode extends Fragment {
         View view = inflater.inflate(R.layout.fragment_recode, container, false);
         recodeList = ((MainActivity)getActivity()).getObjectArrayPref("SHARE_PREF","recode");
         recodeLayout = view.findViewById(R.id.recodeLayout);
+        recodeChart = view.findViewById(R.id.recordChart);
         btnFlag  = new HashMap<String, Boolean>() {
             {put("running", true); put("pushUp", true); put("sitUp", true);}
         };
@@ -99,11 +109,13 @@ public class FragmentRecode extends Fragment {
 
         setYearMonth(0);
         createRecodesLayouts(recodeList);
+        setChartData(recodeList);
         return view;
     }
 
     private void createRecodesLayouts(ArrayList<JSONObject> recodeList) {
         if(recodeLayout.getChildCount() > 0) recodeLayout.removeAllViews(); //1개 이상이 있을 경우 초기화
+
         for(JSONObject data : recodeList) {
             LinearLayout recodesLayout = new LinearLayout(this.getActivity());
             TextView dateTextViews = new TextView(this.getActivity());
@@ -193,4 +205,117 @@ public class FragmentRecode extends Fragment {
         dateTextView.setText(simpleDateFormat.format(cal.getTime()));
     }
 
+    private void setChartData(ArrayList<JSONObject> datas){
+        ArrayList<JSONObject> runningArray = new ArrayList<JSONObject>();
+        ArrayList<JSONObject> pushUpArray = new ArrayList<JSONObject>();
+        ArrayList<JSONObject> sitUpArray = new ArrayList<JSONObject>();
+        try {
+            for(JSONObject data : datas){
+                if(data.get("type").equals("running")){
+                    runningArray.add(data);
+                }else if(data.get("type").equals("pushUp")){
+                    pushUpArray.add(data);
+                }else if(data.get("type").equals("sitUp")){
+                    sitUpArray.add(data);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Comparator<JSONObject> myComparator = new Comparator<JSONObject>() {
+            private static final String KEY_NAME = "date";
+            @Override
+            public int compare(JSONObject a, JSONObject b) {
+                String valA = new String();
+                String valB = new String();
+                try {
+                    valA = (String) a.get(KEY_NAME);
+                    valB = (String) b.get(KEY_NAME);
+                }
+                catch (JSONException e) {
+                }
+                return valA.compareTo(valB);
+            }
+        };
+        runningArray.sort(myComparator);
+        pushUpArray.sort(myComparator);
+        sitUpArray.sort(myComparator);
+
+
+
+        ArrayList<Entry> runningEntry = new ArrayList<>();
+        ArrayList<Entry> pushUpEntry = new ArrayList<>();
+        ArrayList<Entry> sitUpEntry = new ArrayList<>();
+        int i=0;
+        try {
+            for(JSONObject data:runningArray){
+                String value = data.get("count").toString();
+                float num = Float.parseFloat(value.substring(0,value.length()-2));
+                runningEntry.add(new Entry(num, i));
+                i++;
+            }
+            i=0;
+            for(JSONObject data:pushUpArray){
+                String value = data.get("count").toString();
+                float num = Float.parseFloat(value.substring(0,value.length()-1));
+                pushUpEntry.add(new Entry(num, i));
+                i++;
+            }
+            i=0;
+            for(JSONObject data:sitUpArray){
+                String value = data.get("count").toString();
+                float num = Float.parseFloat(value.substring(0,value.length()-1));
+                sitUpEntry.add(new Entry(num, i));
+                i++;
+            }
+        }
+        catch (JSONException e) {
+        }
+
+        ArrayList<LineDataSet> lines = new ArrayList<LineDataSet> ();
+        String[] xAxis = new String[] {"1", "2", "3", "4", "5","6"};
+        LineDataSet runningDataSet = new LineDataSet(runningEntry, "달리기");
+        runningDataSet.setDrawFilled(true);
+        runningDataSet.setDrawFilled(false);
+        lines.add(runningDataSet);
+
+        LineDataSet pushUpDataSet = new LineDataSet(pushUpEntry, "팔굽혀펴기");
+        pushUpDataSet.setDrawFilled(true);
+        pushUpDataSet.setColor(ContextCompat.getColor(getContext(),R.color.colorPrimaryRed));
+        pushUpDataSet.setCircleColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryRed));
+        pushUpDataSet.setDrawFilled(false);
+        pushUpDataSet.setAxisDependency(recodeChart.getAxisRight().getAxisDependency());
+        lines.add(pushUpDataSet);
+
+        LineDataSet sitUpDataSet = new LineDataSet(sitUpEntry, "윗몸일으키기");
+        sitUpDataSet.setDrawFilled(true);
+        sitUpDataSet.setColor(ContextCompat.getColor(getContext(),R.color.colorPrimaryRed));
+        sitUpDataSet.setCircleColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryRed));
+        sitUpDataSet.setDrawFilled(false);
+        sitUpDataSet.setAxisDependency(recodeChart.getAxisRight().getAxisDependency());
+        lines.add(sitUpDataSet);
+
+        XAxis xAxisSet = recodeChart.getXAxis(); // x 축 설정
+        xAxisSet.setDrawGridLines(false);
+        xAxisSet.setDrawLabels(false);
+
+        YAxis yAxisLeftSet = recodeChart.getAxisLeft(); // y 축 설정
+        yAxisLeftSet.setDrawGridLines(false);
+        yAxisLeftSet.setDrawAxisLine(false);
+        yAxisLeftSet.setDrawLabels(false);
+
+        YAxis yAxisRightSet = recodeChart.getAxisRight(); // y 축 설정
+        yAxisRightSet.setDrawGridLines(false);
+        yAxisRightSet.setDrawAxisLine(false);
+        yAxisRightSet.setDrawLabels(false);
+        yAxisRightSet.setSpaceTop(10f);
+
+
+
+        recodeChart.setData(new LineData(xAxis,lines));
+        recodeChart.setBackgroundColor(getResources().getColor(R.color.colorLightGray));
+        recodeChart.setGridBackgroundColor(getResources().getColor(R.color.colorLightGray));
+        recodeChart.animateY(500);
+    }
 }
