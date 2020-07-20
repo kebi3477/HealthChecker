@@ -9,10 +9,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
 import android.provider.Settings;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,7 +41,8 @@ public class FragmentRunning extends Fragment {
     private LinearLayout circleLayout;
     private ConstraintLayout popup;
     private Button startButton, endButton;
-    private TextView timeTextView, countTextView, runningValue, healthRank;
+    private TextView timeTextView, countTextView, healthRank;
+    private EditText runningValue;
 
 
     public static final int INIT = 0;
@@ -87,10 +90,19 @@ public class FragmentRunning extends Fragment {
         endButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).showDialog("체력검정을 종료하시겠습니까?",getJsonObjectRecode(getTimeOut(), type, (String) runningValue.getText()));
+                ((MainActivity)getActivity()).showDialog("체력검정을 종료하시겠습니까?",getJsonObjectRecode(getTimeOut(), type, runningValue.getText().toString(), getLiveHealthRank(changeCount(runningValue.getText().toString()))));
                 popup.setVisibility(View.GONE);
             }
         });
+
+        runningValue.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                healthRank.setText(getLiveHealthRank(changeCount(runningValue.getText().toString())));
+                return true;
+            }
+        });
+
         return view;
     }
 
@@ -116,7 +128,7 @@ public class FragmentRunning extends Fragment {
                 circleLayout.setBackgroundResource(R.drawable.circle);
                 status = INIT;
                 handler.removeMessages(0);
-                showPopup(getJsonObjectRecode((String) timeTextView.getText(), type, (String) countTextView.getText()));
+                showPopup(getJsonObjectRecode((String) timeTextView.getText(), type, (String) countTextView.getText(), getLiveHealthRank(0)));
                 break;
             case RESTART:
                 baseTime += (SystemClock.elapsedRealtime() - endTime);
@@ -147,7 +159,7 @@ public class FragmentRunning extends Fragment {
         return easyOutTime;
     }
 
-    JSONObject getJsonObjectRecode( final String time, final String type, String count) {
+    JSONObject getJsonObjectRecode( final String time, final String type, String count, String rank) {
         JSONObject json = new JSONObject();
         SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd kk:mm:ss");
 
@@ -156,6 +168,7 @@ public class FragmentRunning extends Fragment {
             json.put("time", time);
             json.put("type", type);
             json.put("count", count);
+            json.put("rank", rank);
         } catch (JSONException e) {
             json = null;
             e.printStackTrace();
@@ -198,13 +211,12 @@ public class FragmentRunning extends Fragment {
 
             text2.setVisibility(View.GONE);
             giftOkLength.setVisibility(View.GONE);
-            healthRank.setText(getLiveHealthRank(0));
+            healthRank.setText(getLiveHealthRank(changeCount(runningValue.getText().toString())));
             text.setText("횟수");
         } else {
             upButton.setVisibility(View.GONE);
             downButton.setVisibility(View.GONE);
-            String[] splitTime = String.valueOf(timeTextView.getText()).split(":");
-            healthRank.setText(getLiveHealthRank(Integer.parseInt(splitTime[0] + splitTime[1])));
+            healthRank.setText(getLiveHealthRank(changeCount(runningValue.getText().toString())));
         }
 
         upButton.setOnClickListener(new View.OnClickListener() {
@@ -224,7 +236,7 @@ public class FragmentRunning extends Fragment {
     }
 
     private void upDownEvnet(int plus) {
-        String value = (String) runningValue.getText();
+        String value = runningValue.getText().toString();
         int countValue = Integer.parseInt(value.substring(0, value.length() -1)) + plus;
         if(countValue <= 0) countValue = 0;
         else if(countValue >= 99) countValue = 99;
@@ -274,6 +286,17 @@ public class FragmentRunning extends Fragment {
             }
         }
         return returnRank;
+    }
+
+    private int changeCount(String count) {
+        int returnInt = 0;
+        if(running) {
+            String[] countSplit = count.split(":");
+            returnInt = Integer.parseInt(countSplit[0] + countSplit[1]);
+        } else {
+            returnInt = Integer.parseInt(count.substring(0, count.length() -1));
+        }
+        return returnInt;
     }
 
 }

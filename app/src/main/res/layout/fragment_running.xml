@@ -179,13 +179,16 @@
                         android:layout_height="wrap_content"
                         app:srcCompat="@android:drawable/arrow_up_float" />
 
-                    <TextView
+                    <EditText
                         android:id="@+id/runningValue"
                         android:layout_width="150dp"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:textSize="24sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:ems="10"
+                        android:inputType="textPersonName"
+                        android:text="Name" />
 
                     <ImageButton
                         android:id="@+id/downButton"

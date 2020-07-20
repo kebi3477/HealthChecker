@@ -19,6 +19,7 @@ import com.airforce.healthchecker.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -108,15 +109,18 @@ public class FragmentRecode extends Fragment {
             TextView dateTextViews = new TextView(this.getActivity());
             TextView timeTextViews = new TextView(this.getActivity());
             TextView countTextViews = new TextView(this.getActivity());
+            TextView rankTextViews = new TextView(this.getActivity());
             try {
                 if (String.valueOf(data.get("date")).substring(0, 7).equals(dateTextView.getText().toString())) {
                     timeTextViews.setText("//   " + data.getString("time"));
-                    dateTextViews.setText(data.getString("date"));
+                    dateTextViews.setText(data.getString("date").split(" ")[0]);
                     type = data.getString("type");
                     countTextViews.setText(data.getString("count"));
+                    rankTextViews.setText(data.getString("rank"));
                     //TextView Custom
                     countTextViews.setTextSize(20);
                     countTextViews.setWidth(250);
+                    rankTextViews.setPadding(0, 0, 30, 0);
                     timeTextViews.setPadding(0, 0, 30, 0);
                     //Layout Custom
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT); //Layout Margin 설정
@@ -131,6 +135,7 @@ public class FragmentRecode extends Fragment {
 
                     recodesLayout.addView(countTextViews);
                     recodesLayout.addView(timeTextViews);
+                    recodesLayout.addView(rankTextViews);
                     recodesLayout.addView(dateTextViews);
 
                     recodeLayout.setPadding(20, 0, 20, 0);

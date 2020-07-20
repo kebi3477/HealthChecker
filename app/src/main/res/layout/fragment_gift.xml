@@ -60,8 +60,6 @@
                         android:id="@+id/arrow"
                         android:layout_width="wrap_content"
                         android:layout_height="50dp"
-                        android:background="@color/colorPrimaryBlue"
-                        android:paddingLeft="2000dp"
                         app:srcCompat="@android:drawable/arrow_down_float" />
                 </LinearLayout>
 
