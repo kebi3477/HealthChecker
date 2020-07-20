@@ -1,12 +1,14 @@
 package com.airforce.healthchecker.fragment;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.SystemClock;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class FragmentRunning extends Fragment {
@@ -36,7 +39,7 @@ public class FragmentRunning extends Fragment {
     private LinearLayout circleLayout;
     private ConstraintLayout popup;
     private Button startButton, endButton;
-    private TextView timeTextView, countTextView, runningValue;
+    private TextView timeTextView, countTextView, runningValue, healthRank;
 
 
     public static final int INIT = 0;
@@ -60,6 +63,7 @@ public class FragmentRunning extends Fragment {
         timeTextView = view.findViewById(R.id.timeView);
         countTextView = view.findViewById(R.id.countView);
         runningValue = view.findViewById(R.id.runningValue);
+        healthRank = view.findViewById(R.id.healthRank);
 
         if(type.equals("pushUp") || type.equals("sitUp")) {
             countTextView.setText("0개");
@@ -87,7 +91,6 @@ public class FragmentRunning extends Fragment {
                 popup.setVisibility(View.GONE);
             }
         });
-
         return view;
     }
 
@@ -157,7 +160,6 @@ public class FragmentRunning extends Fragment {
             json = null;
             e.printStackTrace();
         }
-
         return json;
     }
 
@@ -196,10 +198,13 @@ public class FragmentRunning extends Fragment {
 
             text2.setVisibility(View.GONE);
             giftOkLength.setVisibility(View.GONE);
+            healthRank.setText(getLiveHealthRank(0));
             text.setText("횟수");
         } else {
             upButton.setVisibility(View.GONE);
             downButton.setVisibility(View.GONE);
+            String[] splitTime = String.valueOf(timeTextView.getText()).split(":");
+            healthRank.setText(getLiveHealthRank(Integer.parseInt(splitTime[0] + splitTime[1])));
         }
 
         upButton.setOnClickListener(new View.OnClickListener() {
@@ -215,7 +220,6 @@ public class FragmentRunning extends Fragment {
             }
         });
 
-
         popup.setVisibility(View.VISIBLE);
     }
 
@@ -224,7 +228,52 @@ public class FragmentRunning extends Fragment {
         int countValue = Integer.parseInt(value.substring(0, value.length() -1)) + plus;
         if(countValue <= 0) countValue = 0;
         else if(countValue >= 99) countValue = 99;
-        runningValue.setText(String.valueOf(countValue) + "개");
+        runningValue.setText(countValue + "개");
+        healthRank.setText(getLiveHealthRank(countValue));
+    }
+
+    private String getLiveHealthRank(int count) {
+        ArrayList<JSONObject> dataList = ((MainActivity) getActivity()).getObjectArrayPref("HEALTH_PREF_2020", "data");
+        String returnRank = null;
+        for(JSONObject json : dataList) {
+            int age = 25;
+            String countName, levelName;
+            boolean compare;
+            try {
+                if(json.getString("sex").equals("m") &&
+                    json.getString("sinbun").equals("s") &&
+                    json.getInt("age") == age) {
+
+                    if(type.equals("running")) {
+                        countName = "count_r";
+                        levelName = "level_r";
+                        compare = json.getInt(countName) >= count;
+                    }
+                    else if(type.equals("pushUp")) {
+                        countName = "count_p";
+                        levelName = "level_p";
+                        compare = json.getInt(countName) <= count;
+                    }
+                    else {
+                        countName = "count_s";
+                        levelName = "level_s";
+                        compare = json.getInt(countName) <= count;
+                    }
+
+                    if(compare) {
+                        String rank;
+                        rank = json.getInt(levelName) == 0 ? "특" : json.getString(levelName);
+                        returnRank =  rank + "급";
+                        break;
+                    } else {
+                        returnRank = "불합격";
+                    }
+                }
+            } catch(JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return returnRank;
     }
 
 }

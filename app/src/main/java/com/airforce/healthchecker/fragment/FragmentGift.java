@@ -30,7 +30,7 @@ public class FragmentGift extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_gift, container, false);
-        recodeList = ((MainActivity)getActivity()).getObjectArrayPref("recode");
+        recodeList = ((MainActivity)getActivity()).getObjectArrayPref("SHARE_PREF","recode");
         float scale = getResources().getDisplayMetrics().density;
         giftDistance = view.findViewById(R.id.giftDistance);
         arrow = view.findViewById(R.id.arrow);

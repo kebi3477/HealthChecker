@@ -43,7 +43,7 @@ public class FragmentRecode extends Fragment {
     @SuppressLint({"ResourceAsColor", "WrongViewCast"})
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_recode, container, false);
-        recodeList = ((MainActivity)getActivity()).getObjectArrayPref("recode");
+        recodeList = ((MainActivity)getActivity()).getObjectArrayPref("SHARE_PREF","recode");
         recodeLayout = view.findViewById(R.id.recodeLayout);
         btnFlag  = new HashMap<String, Boolean>() {
             {put("running", true); put("pushUp", true); put("sitUp", true);}

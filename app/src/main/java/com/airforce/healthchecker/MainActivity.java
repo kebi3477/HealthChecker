@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentChoose fragmentChoose = new FragmentChoose();
 
     private final String PREF_NAME = "SHARE_PREF";
+    private final String HEALTH_PREF_NAME = "HEALTH_PREF_2020";
 
     private BottomNavigationView navigationView;
 
@@ -82,9 +83,9 @@ public class MainActivity extends AppCompatActivity {
         builder.setPositiveButton("종료", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                ArrayList<JSONObject> recodeArrayList = getObjectArrayPref("recode");
+                ArrayList<JSONObject> recodeArrayList = getObjectArrayPref(PREF_NAME, "recode");
                 recodeArrayList.add(json);
-                setObjectArrayPref("recode", recodeArrayList);
+                setObjectArrayPref(PREF_NAME,"recode", recodeArrayList);
                 navigationView = findViewById(R.id.navigationView); //하단 네비게이션 활성화
                 navigationView.getMenu().getItem(1).setChecked(true);
                 replaceFragment(fragmentRecode); //레코드 창 띄우기
@@ -101,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void setObjectArrayPref(String key, ArrayList<JSONObject> values) {
-        SharedPreferences sharePref = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+    private void setObjectArrayPref(String fileName, String key, ArrayList<JSONObject> values) {
+        SharedPreferences sharePref = getSharedPreferences(fileName, MODE_PRIVATE);
         SharedPreferences.Editor editor = sharePref.edit();
 
         if (!values.isEmpty())
@@ -113,8 +114,8 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    public ArrayList<JSONObject> getObjectArrayPref(String key) {
-        SharedPreferences sharePref = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+    public ArrayList<JSONObject> getObjectArrayPref(String fileName, String key) {
+        SharedPreferences sharePref = getSharedPreferences(fileName, MODE_PRIVATE);
         String json = sharePref.getString(key, null);
         ArrayList<JSONObject> returnDatas = new ArrayList<JSONObject>();
 
