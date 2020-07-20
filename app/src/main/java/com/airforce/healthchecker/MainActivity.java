@@ -19,11 +19,14 @@ import com.airforce.healthchecker.fragment.FragmentRecode;
 import com.airforce.healthchecker.fragment.FragmentRunning;
 import com.airforce.healthchecker.fragment.FragmentStrength;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.opencsv.CSVReader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,7 +36,6 @@ public class MainActivity extends AppCompatActivity {
     private FragmentRecode fragmentRecode = new FragmentRecode();
     private FragmentStrength fragmentStrength = new FragmentStrength();
     private FragmentGift fragmentGift = new FragmentGift();
-    private FragmentRunning fragmentRunning = new FragmentRunning();
 
     private final String PREF_NAME = "SHARE_PREF";
 

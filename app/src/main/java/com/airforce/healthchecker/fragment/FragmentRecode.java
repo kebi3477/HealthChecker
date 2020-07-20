@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,13 +20,21 @@ import com.airforce.healthchecker.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.security.auth.callback.Callback;
+
 public class FragmentRecode extends Fragment {
 
+    private TextView dateTextView;
     private ImageButton runImageBtn, pushUpImageBtn, sitUpImageBtn;
+    private Button prevButton, nextButton;
     private Map<String, Boolean> btnFlag;
     private LinearLayout recodeLayout;
     private String type = null;
@@ -40,9 +49,12 @@ public class FragmentRecode extends Fragment {
             {put("running", true); put("pushUp", true); put("sitUp", true);}
         };
 
-        runImageBtn = (ImageButton) view.findViewById(R.id.runImageButton);
-        pushUpImageBtn = (ImageButton) view.findViewById(R.id.pushUpImageButton);
-        sitUpImageBtn = (ImageButton) view.findViewById(R.id.sitUpImageButton);
+        runImageBtn = view.findViewById(R.id.runImageButton);
+        pushUpImageBtn = view.findViewById(R.id.pushUpImageButton);
+        sitUpImageBtn = view.findViewById(R.id.sitUpImageButton);
+        prevButton = view.findViewById(R.id.prevButton);
+        nextButton = view.findViewById(R.id.nextButton);
+        dateTextView = view.findViewById(R.id.dateTextView);
 
         // running button
         runImageBtn.setOnClickListener(new View.OnClickListener() {
@@ -68,45 +80,66 @@ public class FragmentRecode extends Fragment {
             }
         });
 
+        prevButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setYearMonth(-1);
+                createRecodesLayouts(recodeList);
+            }
+        });
+
+        nextButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setYearMonth(1);
+                createRecodesLayouts(recodeList);
+            }
+        });
+
+        setYearMonth(0);
         createRecodesLayouts(recodeList);
         return view;
     }
 
     private void createRecodesLayouts(ArrayList<JSONObject> recodeList) {
         if(recodeLayout.getChildCount() > 0) recodeLayout.removeAllViews(); //1개 이상이 있을 경우 초기화
-
         for(JSONObject data : recodeList) {
             LinearLayout recodesLayout = new LinearLayout(this.getActivity());
-            TextView dateTextView = new TextView(this.getActivity());
-            TextView timeTextView = new TextView(this.getActivity());
-            TextView countTextView = new TextView(this.getActivity());
+            TextView dateTextViews = new TextView(this.getActivity());
+            TextView timeTextViews = new TextView(this.getActivity());
+            TextView countTextViews = new TextView(this.getActivity());
             try {
-                timeTextView.setText("//   " + data.getString("time"));
-                dateTextView.setText(data.getString("date"));
-                type = data.getString("type");
-                countTextView.setText(data.getString("count"));
-            } catch (JSONException e) {
-                timeTextView.setText("null time");
-                dateTextView.setText("null date");
-                countTextView.setText("null count");
+                if (String.valueOf(data.get("date")).substring(0, 7).equals(dateTextView.getText().toString())) {
+                    timeTextViews.setText("//   " + data.getString("time"));
+                    dateTextViews.setText(data.getString("date"));
+                    type = data.getString("type");
+                    countTextViews.setText(data.getString("count"));
+                    //TextView Custom
+                    countTextViews.setTextSize(20);
+                    countTextViews.setWidth(250);
+                    //Layout Custom
+                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT); //Layout Margin 설정
+                    layoutParams.setMargins(10, 10, 10, 10); //Margin 적용
+                    recodesLayout.setPaddingRelative(40, 20, 20, 20); //Padding 적용
+                    if (type.equals("running"))
+                        recodesLayout.setBackgroundResource(R.drawable.rounded_recodes_running);
+                    else if (type.equals("pushUp"))
+                        recodesLayout.setBackgroundResource(R.drawable.rounded_recodes_pushup);
+                    else if (type.equals("sitUp"))
+                        recodesLayout.setBackgroundResource(R.drawable.rounded_recodes_situp);
+
+                    recodesLayout.addView(countTextViews);
+                    recodesLayout.addView(timeTextViews);
+                    recodesLayout.addView(dateTextViews);
+
+                    recodeLayout.addView(recodesLayout, layoutParams);
+                }
+            } catch (Exception e) {
+                timeTextViews.setText("null time");
+                dateTextViews.setText("null date");
+                countTextViews.setText("null count");
                 e.printStackTrace();
             }
-            //TextView Custom
-            countTextView.setTextSize(20);
-            countTextView.setWidth(250);
-            //Layout Custom
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT); //Layout Margin 설정
-            layoutParams.setMargins(10,10,10,10); //Margin 적용
-            recodesLayout.setPaddingRelative(40, 20, 20, 20); //Padding 적용
-            if(type.equals("running"))      recodesLayout.setBackgroundResource(R.drawable.rounded_recodes_running);
-            else if(type.equals("pushUp"))  recodesLayout.setBackgroundResource(R.drawable.rounded_recodes_pushup);
-            else if(type.equals("sitUp"))   recodesLayout.setBackgroundResource(R.drawable.rounded_recodes_situp);
-
-            recodesLayout.addView(countTextView);
-            recodesLayout.addView(timeTextView);
-            recodesLayout.addView(dateTextView);
-
-            recodeLayout.addView(recodesLayout, layoutParams);
         }
     }
 
@@ -137,4 +170,20 @@ public class FragmentRecode extends Fragment {
         ArrayList<JSONObject> filtered = filteredType(recodeList);
         createRecodesLayouts(filtered);
     }
+
+    private void setYearMonth(int plus) {
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy.MM");
+        Calendar cal = Calendar.getInstance();
+        int month, year;
+        if(plus != 0) {
+            month = Integer.parseInt(String.valueOf(dateTextView.getText()).substring(5,7));
+            year = Integer.parseInt(String.valueOf(dateTextView.getText()).substring(0,4));
+            month = month + plus;
+            cal.set(Calendar.MONTH, month-1);
+            cal.set(Calendar.YEAR, year);
+        }
+        dateTextView.setText(simpleDateFormat.format(cal.getTime()));
+    }
+
 }
