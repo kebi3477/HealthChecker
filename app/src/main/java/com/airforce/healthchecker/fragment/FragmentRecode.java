@@ -256,6 +256,7 @@ public class FragmentRecode extends Fragment {
                 runningEntry.add(new Entry(num, i));
                 i++;
             }
+            if(max<i)max=i;
             i=0;
             for(JSONObject data:pushUpArray){
                 String value = data.get("count").toString();
@@ -263,6 +264,7 @@ public class FragmentRecode extends Fragment {
                 pushUpEntry.add(new Entry(num, i));
                 i++;
             }
+            if(max<i)max=i;
             i=0;
             for(JSONObject data:sitUpArray){
                 String value = data.get("count").toString();
@@ -270,6 +272,7 @@ public class FragmentRecode extends Fragment {
                 sitUpEntry.add(new Entry(num, i));
                 i++;
             }
+            if(max<i)max=i;
         }
         catch (JSONException e) {
         }
@@ -277,10 +280,9 @@ public class FragmentRecode extends Fragment {
         int maxLength=length[0]>length[1]?
                 (length[0]>length[2]?length[0]:(length[1]>length[2]?length[1]
                        :length[2])):0;
-
         ArrayList<LineDataSet> lines = new ArrayList<LineDataSet> ();
-        String[] xAxis = new String[maxLength];
-        for(int j=0;j<maxLength;j++){
+        String[] xAxis = new String[max];
+        for(int j=0;j<max;j++){
             xAxis[j]="0";
         }
         LineDataSet runningDataSet = new LineDataSet(runningEntry, "달리기");

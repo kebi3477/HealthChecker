@@ -129,7 +129,7 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
         endButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).showDialog("체력검정을 종료하시겠습니까?",getJsonObjectRecode(getTimeOut(), type, runningValue.getText().toString(), getLiveHealthRank(changeCount(runningValue.getText().toString()))));
+                ((MainActivity)getActivity()).showDialog("체력검정을 종료하시겠습니까?",getJsonObjectRecode(getTimeOut(), type, runningValue.getText().toString(), getLiveHealthRank(changeCount(timeTextView.getText().toString()))));
                 popup.setVisibility(View.GONE);
             }
         });
@@ -309,7 +309,7 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
         } else {
             upButton.setVisibility(View.GONE);
             downButton.setVisibility(View.GONE);
-            healthRank.setText(getLiveHealthRank(changeCount(countTextView.getText().toString())));
+            healthRank.setText(getLiveHealthRank(changeCount(timeTextView.getText().toString())));
         }
 
         upButton.setOnClickListener(new View.OnClickListener() {
@@ -332,7 +332,7 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
     private void upDownEvnet(int plus) {
         String value = runningValue.getText().toString();
         isRunning=false;
-        String value = (String) runningValue.getText();
+        //String value = (String) runningValue.getText();
         runningValue.setText(0+ "개");
         int countValue = Integer.parseInt(value.substring(0, value.length() -1)) + plus;
         if(countValue <= 0) countValue = 0;
