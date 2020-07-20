@@ -331,6 +331,9 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
 
     private void upDownEvnet(int plus) {
         String value = runningValue.getText().toString();
+        isRunning=false;
+        String value = (String) runningValue.getText();
+        runningValue.setText(0+ "개");
         int countValue = Integer.parseInt(value.substring(0, value.length() -1)) + plus;
         if(countValue <= 0) countValue = 0;
         else if(countValue >= 99) countValue = 99;
