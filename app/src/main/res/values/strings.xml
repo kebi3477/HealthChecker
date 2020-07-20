@@ -26,4 +26,7 @@
     <string name="gift_goal3">30km</string>
     <string name="gift_goal4">40km</string>
     <string name="gift_goal5">50km</string>
+
+    <string name="recode">기록</string>
+    <string name="competition">경쟁</string>
 </resources>

@@ -117,6 +117,7 @@ public class FragmentRecode extends Fragment {
                     //TextView Custom
                     countTextViews.setTextSize(20);
                     countTextViews.setWidth(250);
+                    timeTextViews.setPadding(0, 0, 30, 0);
                     //Layout Custom
                     LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT); //Layout Margin 설정
                     layoutParams.setMargins(10, 10, 10, 10); //Margin 적용
@@ -132,6 +133,7 @@ public class FragmentRecode extends Fragment {
                     recodesLayout.addView(timeTextViews);
                     recodesLayout.addView(dateTextViews);
 
+                    recodeLayout.setPadding(20, 0, 20, 0);
                     recodeLayout.addView(recodesLayout, layoutParams);
                 }
             } catch (Exception e) {

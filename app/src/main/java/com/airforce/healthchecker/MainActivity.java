@@ -1,5 +1,10 @@
 package com.airforce.healthchecker;
 
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,26 +12,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.view.MenuItem;
-
-
-import com.airforce.healthchecker.fragment.FragmentHome;
+import com.airforce.healthchecker.fragment.FragmentChoose;
 import com.airforce.healthchecker.fragment.FragmentGift;
+import com.airforce.healthchecker.fragment.FragmentHome;
 import com.airforce.healthchecker.fragment.FragmentRecode;
 import com.airforce.healthchecker.fragment.FragmentRunning;
 import com.airforce.healthchecker.fragment.FragmentStrength;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.opencsv.CSVReader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -36,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentRecode fragmentRecode = new FragmentRecode();
     private FragmentStrength fragmentStrength = new FragmentStrength();
     private FragmentGift fragmentGift = new FragmentGift();
+    private FragmentChoose fragmentChoose = new FragmentChoose();
 
     private final String PREF_NAME = "SHARE_PREF";
 
@@ -60,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                     replaceFragment(fragmentHome);
                     break;
                 case R.id.recodeItem:
-                    replaceFragment(fragmentRecode);
+                    replaceFragment(fragmentChoose);
                     break;
                 case R.id.strengthItem:
                     replaceFragment(fragmentStrength);
@@ -89,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
                 setObjectArrayPref("recode", recodeArrayList);
                 navigationView = findViewById(R.id.navigationView); //하단 네비게이션 활성화
                 navigationView.getMenu().getItem(1).setChecked(true);
-                replaceFragment(new FragmentRecode()); //레코드 창 띄우기
+                replaceFragment(fragmentRecode); //레코드 창 띄우기
             }
         });
         builder.setNegativeButton("일시정지", new DialogInterface.OnClickListener() {

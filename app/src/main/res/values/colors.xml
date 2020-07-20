@@ -21,4 +21,9 @@
 
     <color name="colorPrimaryOrange">#FF6845</color>
 
+    <color name="colorRecodeButton">#FFF792</color>
+    <color name="colorRecodeText">#DDCD5F</color>
+    <color name="colorCompetitionButton">#A1FFBC</color>
+    <color name="colorCompetitionText">#4FE075</color>
+
 </resources>
