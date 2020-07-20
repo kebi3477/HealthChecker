@@ -96,6 +96,7 @@ public class FragmentRecode extends Fragment {
             public void onClick(View v) {
                 setYearMonth(-1);
                 createRecodesLayouts(recodeList);
+                setChartData(recodeList);
             }
         });
 
@@ -104,6 +105,7 @@ public class FragmentRecode extends Fragment {
             public void onClick(View v) {
                 setYearMonth(1);
                 createRecodesLayouts(recodeList);
+                setChartData(recodeList);
             }
         });
 
@@ -188,6 +190,7 @@ public class FragmentRecode extends Fragment {
 
         ArrayList<JSONObject> filtered = filteredType(recodeList);
         createRecodesLayouts(filtered);
+        setChartData(filtered);
     }
 
     private void setYearMonth(int plus) {
@@ -321,6 +324,8 @@ public class FragmentRecode extends Fragment {
         yAxisRightSet.setDrawAxisLine(false);
         yAxisRightSet.setDrawLabels(false);
         yAxisRightSet.setSpaceTop(10f);
+
+        recodeChart.setDescription("");
 
 
 

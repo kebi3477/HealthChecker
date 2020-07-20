@@ -216,7 +216,7 @@
                             android:textStyle="bold" />
 
                         <ImageView
-                            android:id="@+id/imageView5"
+                            android:id="@+id/runningCheckImage"
                             android:layout_width="41dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -270,7 +270,7 @@
                             android:textStyle="bold" />
 
                         <ImageView
-                            android:id="@+id/imageView6"
+                            android:id="@+id/pushUpCheckImage"
                             android:layout_width="41dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -324,7 +324,7 @@
                             android:textStyle="bold" />
 
                         <ImageView
-                            android:id="@+id/imageView6"
+                            android:id="@+id/pushUpCheckImage"
                             android:layout_width="41dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
@@ -378,7 +378,7 @@
                             android:textStyle="bold" />
 
                         <ImageView
-                            android:id="@+id/imageView7"
+                            android:id="@+id/sitUpCheckImage"
                             android:layout_width="41dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"

@@ -389,6 +389,8 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
         int returnInt = 0;
         if(running) {
             String[] countSplit = count.split(":");
+            Log.d("countSplit0",countSplit[0]);
+            Log.d("countSplit1",countSplit[1]);
             returnInt = Integer.parseInt(countSplit[0] + countSplit[1]);
         } else {
             returnInt = Integer.parseInt(count.substring(0, count.length() -1));
