@@ -41,14 +41,6 @@
                     android:textColor="@android:color/white"
                     android:textSize="22sp" />
 
-                <TextView
-                    android:id="@+id/textView3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="10명 진행 중"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
-
             </LinearLayout>
 
             <ImageView
@@ -88,14 +80,6 @@
                     android:textColor="@android:color/white"
                     android:textSize="22sp" />
 
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="10명 진행 중"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />
-
             </LinearLayout>
 
             <ImageView
@@ -134,16 +118,11 @@
                     android:layout_height="wrap_content"
                     android:text="@string/sitUp"
                     android:textColor="@android:color/white"
-                    android:textSize="22sp" />
+                    android:textSize="22sp" /><![CDATA[
 
-                <TextView
-                    android:id="@+id/textView7"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="10명 진행 중"
-                    android:textColor="@android:color/white"
-                    android:textSize="16sp" />/>
+                />
 
+            ]]>
             </LinearLayout>
 
             <ImageView

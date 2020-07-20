@@ -304,12 +304,12 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
 
             text2.setVisibility(View.GONE);
             giftOkLength.setVisibility(View.GONE);
-            healthRank.setText(getLiveHealthRank(changeCount(runningValue.getText().toString())));
+            healthRank.setText(getLiveHealthRank(0));
             text.setText("횟수");
         } else {
             upButton.setVisibility(View.GONE);
             downButton.setVisibility(View.GONE);
-            healthRank.setText(getLiveHealthRank(changeCount(runningValue.getText().toString())));
+            healthRank.setText(getLiveHealthRank(changeCount(countTextView.getText().toString())));
         }
 
         upButton.setOnClickListener(new View.OnClickListener() {

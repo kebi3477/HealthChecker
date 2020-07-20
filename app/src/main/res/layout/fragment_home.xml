@@ -75,14 +75,6 @@
                             android:textColor="@android:color/white"
                             android:textSize="18sp" />
 
-                        <TextView
-                            android:id="@+id/textView3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="10명 진행 중"
-                            android:textColor="@android:color/white"
-                            android:textSize="14sp" />
-
                     </LinearLayout>
 
                     <ImageView
@@ -119,14 +111,6 @@
                             android:textColor="@android:color/white"
                             android:textSize="18sp" />
 
-                        <TextView
-                            android:id="@+id/textView5"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="10명 진행 중"
-                            android:textColor="@android:color/white"
-                            android:textSize="14sp" />
-
                     </LinearLayout>
 
                     <ImageView
@@ -162,14 +146,6 @@
                             android:text="@string/sitUp"
                             android:textColor="@android:color/white"
                             android:textSize="18sp" />
-
-                        <TextView
-                            android:id="@+id/textView8"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="10명 진행 중"
-                            android:textColor="@android:color/white"
-                            android:textSize="14sp" />
 
                     </LinearLayout>
 

@@ -17,6 +17,7 @@ public class FragmentChoose extends Fragment {
 
     private LinearLayout recodeButton, competitionButton;
     private FragmentRecode fragmentRecode = new FragmentRecode();
+    private FragmentCompetition fragmentCompetition = new FragmentCompetition();
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_choose, container, false);
@@ -28,6 +29,13 @@ public class FragmentChoose extends Fragment {
             @Override
             public void onClick(View v) {
                 ((MainActivity)getActivity()).replaceFragment(fragmentRecode);
+            }
+        });
+
+        competitionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((MainActivity)getActivity()).replaceFragment(fragmentCompetition);
             }
         });
 
