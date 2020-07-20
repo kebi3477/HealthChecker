@@ -12,6 +12,10 @@
     <string name="pushUp">팔굽혀펴기</string>
     <string name="sitUp">윗몸일으키기</string>
 
+    <string name="runningValue">달린 거리</string>
+    <string name="useTime">소요 시간</string>
+    <string name="giftValue">보상 인정 거리</string>
+    <string name="healthRank">체력 검정 등급</string>
     <string name="prev">이전</string>
     <string name="next">다음</string>
 

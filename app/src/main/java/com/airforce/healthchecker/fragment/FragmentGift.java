@@ -42,7 +42,7 @@ public class FragmentGift extends Fragment {
                     totalDistance += Float.parseFloat(json.getString("count").substring(0,4));
                 }
             }
-            totalDistance = 30f;
+            totalDistance = totalDistance >= 3f ? 3f : totalDistance;
             if(totalDistance >= 10f) {
                 arrowMargin = lerp(370, 2000, 1f/40*totalDistance - 1f/4)*scale;
             } else {

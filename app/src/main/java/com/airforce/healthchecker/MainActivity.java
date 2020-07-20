@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        this.getSupportActionBar().hide();
         replaceFragment(fragmentHome);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.navigationView);
