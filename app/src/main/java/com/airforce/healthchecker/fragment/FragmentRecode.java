@@ -242,7 +242,8 @@ public class FragmentRecode extends Fragment {
         ArrayList<Entry> runningEntry = new ArrayList<>();
         ArrayList<Entry> pushUpEntry = new ArrayList<>();
         ArrayList<Entry> sitUpEntry = new ArrayList<>();
-        int i=0;
+        int i=0,max=0;
+
         try {
             for(JSONObject data:runningArray){
                 String value = data.get("count").toString();
@@ -267,9 +268,16 @@ public class FragmentRecode extends Fragment {
         }
         catch (JSONException e) {
         }
+        int[] length={runningArray.size(),pushUpArray.size(),sitUpArray.size()};
+        int maxLength=length[0]>length[1]?
+                (length[0]>length[2]?length[0]:(length[1]>length[2]?length[1]
+                       :length[2])):0;
 
         ArrayList<LineDataSet> lines = new ArrayList<LineDataSet> ();
-        String[] xAxis = new String[] {"1", "2", "3", "4", "5","6"};
+        String[] xAxis = new String[maxLength];
+        for(int j=0;j<maxLength;j++){
+            xAxis[j]="0";
+        }
         LineDataSet runningDataSet = new LineDataSet(runningEntry, "달리기");
         runningDataSet.setDrawFilled(true);
         runningDataSet.setDrawFilled(false);
@@ -285,8 +293,9 @@ public class FragmentRecode extends Fragment {
 
         LineDataSet sitUpDataSet = new LineDataSet(sitUpEntry, "윗몸일으키기");
         sitUpDataSet.setDrawFilled(true);
-        sitUpDataSet.setColor(ContextCompat.getColor(getContext(),R.color.colorPrimaryRed));
-        sitUpDataSet.setCircleColor(ContextCompat.getColor(getContext(), R.color.colorPrimaryRed));
+        sitUpDataSet.setColor(ContextCompat.getColor(getContext(),R.color.colorPrimaryGreen));
+        sitUpDataSet.setCircleColor(ContextCompat.getColor(getContext(),
+                R.color.colorPrimaryGreen));
         sitUpDataSet.setDrawFilled(false);
         sitUpDataSet.setAxisDependency(recodeChart.getAxisRight().getAxisDependency());
         lines.add(sitUpDataSet);

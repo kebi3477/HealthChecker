@@ -102,14 +102,63 @@
             android:layout_weight=".7"
             android:orientation="horizontal">
 
-            <View
-                android:id="@+id/view"
+            <!--<View-->
+                <!--android:id="@+id/view"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent"-->
+                <!--android:layout_marginEnd="5dp"-->
+                <!--android:layout_weight=".5"-->
+                <!--android:background="@color/colorPrimaryGray"-->
+                <!--tools:ignore="NestedWeights" />-->
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="5dp"
                 android:layout_weight=".5"
                 android:background="@color/colorPrimaryGray"
-                tools:ignore="NestedWeights" />
+                android:orientation="vertical"
+                android:padding="10dp"
+                tools:ignore="NestedWeights">
+
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="공군내 순위"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/textView17"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="40dp"
+                    android:layout_marginBottom="-2dp"
+                    android:text="5위 송창근"
+                    android:textAlignment="center"
+                    android:textColor="#43FFFFFF" />
+
+                <TextView
+                    android:id="@+id/textView18"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="-4dp"
+                    android:text="6위 강희원"
+                    android:textAlignment="center"
+                    android:textColor="#8BFFFFFF"
+                    android:textSize="24sp" />
+
+                <TextView
+                    android:id="@+id/textView19"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="7위 박유천"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/white"
+                    android:textSize="30sp" />
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
