@@ -65,7 +65,7 @@ public class FragmentRecode extends Fragment {
         sitUpImageBtn = view.findViewById(R.id.sitUpImageButton);
         prevButton = view.findViewById(R.id.prevButton);
         nextButton = view.findViewById(R.id.nextButton);
-        dateTextView = view.findViewById(R.id.dateTextView);
+        dateTextView = view.findViewById(R. id.dateTextView);
 
         // running button
         runImageBtn.setOnClickListener(new View.OnClickListener() {
