@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.airforce.healthchecker.fragment.FragmentChoose;
 import com.airforce.healthchecker.fragment.FragmentGift;
 import com.airforce.healthchecker.fragment.FragmentHome;
+import com.airforce.healthchecker.fragment.FragmentMy;
 import com.airforce.healthchecker.fragment.FragmentRecode;
 import com.airforce.healthchecker.fragment.FragmentRunning;
 import com.airforce.healthchecker.fragment.FragmentStrength;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private FragmentStrength fragmentStrength = new FragmentStrength();
     private FragmentGift fragmentGift = new FragmentGift();
     private FragmentChoose fragmentChoose = new FragmentChoose();
+    private FragmentMy fragmentMy = new FragmentMy();
 
     private final String PREF_NAME = "SHARE_PREF";
     private final String HEALTH_PREF_NAME = "HEALTH_PREF_2020";
@@ -66,6 +68,9 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case R.id.rankingItem:
                     replaceFragment(fragmentGift);
+                    break;
+                case R.id.moreItem:
+                    replaceFragment(fragmentMy);
                     break;
             }
             return true;
