@@ -60,24 +60,27 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
     double[] distanceOneSecond=new double[3];
     double[] delta=new double[3];
     double totalDistance=0;
+    double tempDistance=0;
+
     float[] previousAccelData=new float[3];
+    float stepThreshold = 15;
+    boolean stepCounted = false;
     int smallChangeCount =0;
     int lowValueCount =0;
-    long startSTEP = 0;
-    long currentSTEP = 0;
+    long startStep = 0;
+    long currentStep = 0;
     long lastTime = System.currentTimeMillis();
+    long lastStepTime = System.currentTimeMillis();
+
+
+    double maxSpeed=0;
+    int[] recentStepPeriod={0,0,0,0,0,0,0,0,0,0};
+
 
     private SensorManager sensorManager;
     private Sensor accelSensor;
     private Sensor rotateSensor;
     private Sensor stepSensor;
-    TextView value0;
-    TextView value1;
-    TextView value2;
-    TextView value3;
-    TextView value4;
-    TextView value5;
-    TextView value6;
     //--------------변수 선언 끝-----------------------
 
 
@@ -113,7 +116,9 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    totalDistance += Math.sqrt(Math.pow(distanceOneSecond[0], 2) + Math.pow(distanceOneSecond[1], 2));
+                    //if(totalDistance<100)
+                    totalDistance += 0.8*Math.sqrt(Math.pow(distanceOneSecond[0],
+                            2) + Math.pow(distanceOneSecond[1], 2));
                     distanceOneSecond[0] = 0;
                     distanceOneSecond[1] = 0;
                     Log.d("totalDistance", String.format("%.4f", totalDistance));
@@ -129,29 +134,14 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
                 public void onSensorChanged(SensorEvent event) {
                     Sensor sensor = event.sensor;
                     if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-//                    SensorManager.getRotationMatrixFromVector(rotate,event.values);
-//                    Log.d("Rotaeion value",String.format("%.4f",rotate[0])+String.format("%.4f",rotate[1])+String.format("%.4f",rotate[2])+
-//                            String.format("%.4f",rotate[3])+String.format("%.4f",rotate[4])+String.format("%.4f",rotate[5])+
-//                            String.format("%.4f",rotate[6])+String.format("%.4f",rotate[7])+String.format("%.4f",rotate[8]));
                         newAcceleration(event.values);
                         if(isRunning==true)
-                            countTextView.setText(String.format("%.2fkm",totalDistance/1000));
+                                countTextView.setText(String.format("%.2fkm",
+                                        totalDistance/1000));
 
                     }
                     if (sensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-                        newRotationVector(event.values);
-//                    for (int i = 0; i < 3; i++) {
-//                        acc[i] = (event.values[0]* rotate[i * 3] + event.values[1]* rotate[i * 3 + 1]
-//                                + event.values[2] * rotate[i * 3 + 2]);
-//                    }
-//                    Log.d("Function Test","X:"+String.format("%.4f",acc[0])+"    Y:"+String.format("%.4f",acc[1])+"     Z:"+String.format("%.4f",acc[2]));
-                    }
-                    if (sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
-                        if (startSTEP == 0) {
-                            startSTEP = (long) event.values[0];
-                        }
-                        currentSTEP = (long) (event.values[0] - startSTEP);
-                        Log.d("raw", "STEP" + event.values[0]);
+                            newRotationVector(event.values);
                     }
                 }
 
@@ -184,6 +174,9 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
                 baseTime = SystemClock.elapsedRealtime();
                 startButton.setText("종료"); //텍스트 변경
                 circleLayout.setBackgroundResource(circle);
+                speed[0]=0;
+                speed[1]=0;
+                totalDistance=0;
                 status = RUN; //상태 변환
                 handler.sendEmptyMessage(0);
                 break;
@@ -194,7 +187,8 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
                 status = INIT;
                 handler.removeMessages(0);
                 ((MainActivity)getActivity()).showDialog("체력검정을 종료하시겠습니까?",getJsonObjectRecode(getTimeOut(), type, (String) countTextView.getText()));
-
+                tempDistance = totalDistance;
+                totalDistance = 0;
                 break;
             case RESTART:
                 isRunning=(type.equals("running"))?true:false;
@@ -203,6 +197,7 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
                 circleLayout.setBackgroundResource(circle);
                 handler.sendEmptyMessage(0);
                 status = RUN;
+                totalDistance = tempDistance;
                 break;
         }
     }
@@ -287,31 +282,41 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
         vector = postFilter(vector);
 
 
-        //--debug start--
-        SensorManager.getOrientation(rotationMatrix, orientaionValueForTest);
-        convertToDegrees(orientaionValueForTest);
-        //--debug end--
+
+        if(Math.abs(vector[2])>stepThreshold && stepCounted==false){
+            if(currentStep==0)lastStepTime=System.currentTimeMillis();
+            else{
+                for(int i=0;i<9;i++){
+                    recentStepPeriod[i]=recentStepPeriod[i+1];
+                }
+                recentStepPeriod[9]=(int)(System.currentTimeMillis()-lastStepTime);
+                lastStepTime=System.currentTimeMillis();
+            }
+            currentStep++;
+            stepCounted = true;
+            //if(totalDistance>100)
+            totalDistance+=0.17;
+        }else if(Math.abs(vector[2]) < stepThreshold-2){
+            stepCounted = false;
+        }
+
 
         speed[0]+=vector[0]*interval/1000.0;
         speed[1]+=vector[1]*interval/1000.0;
-        //speed[2]+=vector[2;
-        distanceOneSecond[0]+=speed[0]*interval/1000.0;
-        distanceOneSecond[1]+=speed[1]*interval/1000.0;
-        //distanceOneSecond[2]+=speed[2]*interval/1000.0;
+        distanceOneSecond[0]+=speed[0]*interval/1000;
+        distanceOneSecond[1]+=speed[1]*interval/1000;
 
         Log.d("acceleration", "Interval:"+interval/1000.0+ "    X:"+String.format("%.4f",vector[0])+"    Y:"+String.format("%.4f",vector[1])+"    Z:"+String.format("%.4f",vector[2]));
         Log.d("speed", "X:"+String.format("%.4f",speed[0])+"    Y:"+String.format("%.4f",speed[1])+"    Z:"+String.format("%.4f",speed[2]));
         Log.d("distanceOneSecond", "X:"+String.format("%.4f",distanceOneSecond[0])+"    Y:"+String.format("%.4f",distanceOneSecond[1])+"    Z:"+String.format("%.4f",distanceOneSecond[2]));
 
         previousAccelData = vector;
-        //        val direction = Vector3.fromFloatArray(vector);
 
 
 
 
     }
 
-    // Manage gyroscope value
     private void newRotationVector(float[] quaternion) {
         SensorManager.getRotationMatrixFromVector(rotationMatrix, quaternion);
     }
@@ -330,19 +335,41 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
 
     float[] preFilter(float[] data){
         double movingDistance=Math.sqrt(Math.pow(data[0]-previousAccelData[0],2)+Math.pow(data[1] - previousAccelData[1],2));
+
+        int tenStepTime = 0;
+        if(recentStepPeriod[0]!=0)
+            for(int i=0;i<10;i++){
+                tenStepTime+=recentStepPeriod[i];
+            }
+        double currentSpeed =Math.sqrt(Math.pow(speed[0],2)+Math.pow(speed[1]
+                ,2));
+        if(currentStep>10&&currentSpeed>0.5) {
+            maxSpeed =
+                    (1609.344 / stepConverter(currentSpeed, 170)) / tenStepTime / 100;
+        }
+        if(maxSpeed>4)
+            maxSpeed=4;
+        if(currentSpeed>maxSpeed&&currentSpeed>1){
+            if(maxSpeed!=0){
+                double divisionRatio=currentSpeed/maxSpeed;
+                speed[0]/=divisionRatio;
+                speed[1]/=divisionRatio;
+            }
+        }
         if(Math.abs(movingDistance)<0.2){
             smallChangeCount++;
-        }else if(movingDistance>1){
+        }else if(movingDistance>0.4){
             smallChangeCount=0;
         }
         if(smallChangeCount>10){
-            data[0]*=0.1;
-            data[1]*=0.1;
+            data[0]*=0.5;
+            data[1]*=0.5;
         }
         if(smallChangeCount>30){
-            speed[0]*=0.1;
-            speed[1]*=0.1;
+            speed[0]*=0.2;
+            speed[1]*=0.2;
         }
+
 
         if(Math.abs(data[0])<0.010||Math.abs(data[1])<0.010){
             lowValueCount++;
@@ -352,7 +379,7 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
             data[1]=0;
             lowValueCount-=10;
         }
-
+        tenStepTime=0;
         return data;
     }
 
@@ -369,9 +396,12 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
 
         return data;
     }
-    int stepConverter(float speed,float height){
-        speed= (float) (1609.344/speed/60);
-        return (int)(1997-(5.31496*(height-152.4))-(speed-12)*143.5);
+    int stepConverter(double speed,float height){
+        if(speed>2) {
+            float exchangedSpeed = (float) (1609.344 / speed / 60);
+            return (int) (1997 - (5.31496 * (height - 152.4)) - (exchangedSpeed - 12) * 143.5);
+        }else
+            return 1997;
     }
 
 
