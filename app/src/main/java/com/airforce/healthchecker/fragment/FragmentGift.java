@@ -54,19 +54,19 @@ public class FragmentGift extends Fragment {
 
             if(totalDistance >= 10f) {
                 giftBox1 = view.findViewById(R.id.giftBox1);
-                giftBox1.setImageResource(R.mipmap.gift);
+                giftBox1.setImageResource(R.mipmap.gift_open);
             } else if(totalDistance >= 20f) {
                 giftBox2 = view.findViewById(R.id.giftBox2);
-                giftBox2.setImageResource(R.mipmap.gift);
-            } else if(totalDistance >= 20f) {
+                giftBox2.setImageResource(R.mipmap.gift_open);
+            } else if(totalDistance >= 30f) {
                 giftBox3 = view.findViewById(R.id.giftBox3);
-                giftBox3.setImageResource(R.mipmap.gift);
-            } else if(totalDistance >= 20f) {
+                giftBox3.setImageResource(R.mipmap.gift_open);
+            } else if(totalDistance >= 40f) {
                 giftBox4 = view.findViewById(R.id.giftBox4);
-                giftBox4.setImageResource(R.mipmap.gift);
-            } else {
+                giftBox4.setImageResource(R.mipmap.gift_open);
+            } else if(totalDistance >= 50f){
                 giftBox5 = view.findViewById(R.id.giftBox5);
-                giftBox5.setImageResource(R.mipmap.gift);
+                giftBox5.setImageResource(R.mipmap.gift_open);
             }
 
         } catch (JSONException e) {
