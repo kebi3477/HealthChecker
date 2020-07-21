@@ -109,6 +109,7 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
 
         if(type.equals("pushUp") || type.equals("sitUp")) {
             countTextView.setText("0개");
+
         }
 
         startButton.setOnClickListener(new View.OnClickListener() { //버튼 클릭 이벤트
@@ -196,6 +197,7 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
                     SensorManager.SENSOR_DELAY_NORMAL);
         }
         //---------------------------------------
+        init();
         return view;
     }
 
@@ -214,6 +216,7 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
                 circleLayout.setBackgroundResource(circle);
                 status = RUN; //상태 변환
                 isRunning=true;
+                init();
                 handler.sendEmptyMessage(0);
                 break;
             case RUN:
@@ -558,12 +561,18 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
 
         return data;
     }
-    int stepConverter(double speed,float height){
-        if(speed>2) {
+    int stepConverter(double speed,float height) {
+        if (speed > 2) {
             float exchangedSpeed = (float) (1609.344 / speed / 60);
             return (int) (1997 - (5.31496 * (height - 152.4)) - (exchangedSpeed - 12) * 143.5);
-        }else
+        } else
             return 1997;
+    }
+    void init(){
+        speed[0]=0;
+        speed[1]=0;
+        totalDistance=0;
+        baseTime = SystemClock.elapsedRealtime();
     }
 
 }
