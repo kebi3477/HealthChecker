@@ -174,7 +174,7 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
                     Sensor sensor = event.sensor;
                     if (sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
                         newAcceleration(event.values);
-                        if(isRunning==true)
+                        if(isRunning==true&&type.equals("running"))
                             countTextView.setText(String.format("%.2fkm",
                                     totalDistance/1000));
 
