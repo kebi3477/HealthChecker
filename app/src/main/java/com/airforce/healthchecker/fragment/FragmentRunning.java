@@ -129,7 +129,11 @@ public class FragmentRunning extends Fragment implements SensorEventListener {
         endButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((MainActivity)getActivity()).showDialog("체력검정을 종료하시겠습니까?",getJsonObjectRecode(getTimeOut(), type, runningValue.getText().toString(), getLiveHealthRank(changeCount(timeTextView.getText().toString()))));
+                if(type.equals("running"))
+                    ((MainActivity)getActivity()).showDialog("체력검정을 종료하시겠습니까?",getJsonObjectRecode(getTimeOut(), type, runningValue.getText().toString(), getLiveHealthRank(changeCount(timeTextView.getText().toString()))));
+                else
+                    ((MainActivity)getActivity()).showDialog("체력검정을 종료하시겠습니까?",getJsonObjectRecode(getTimeOut(), type, runningValue.getText().toString(), getLiveHealthRank(changeCount(countTextView.getText().toString()))));
+
                 popup.setVisibility(View.GONE);
             }
         });
